@@ -1,12 +1,11 @@
 package com.project.superleague.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "Teams")
@@ -38,4 +37,38 @@ public class Team extends AbstractEntity {
 
     @Column(name = "PresidentLastname", length = 30)
     private String presidentLastname;
+
+    @OneToMany(mappedBy = "hostTeam")
+    @Getter(AccessLevel.PROTECTED)
+    private Set<Match> matchesHost = new HashSet<>();
+
+    public Set<Match> getAllMatchesHost() {
+        return Collections.unmodifiableSet(matchesHost);
+    }
+
+    @OneToMany(mappedBy = "guestTeam")
+    @Getter(AccessLevel.PROTECTED)
+    private Set<Match> matchesGuest= new HashSet<>();
+
+    public Set<Match> getAllMatchesGuest() {
+        return Collections.unmodifiableSet(matchesGuest);
+    }
+
+    @OneToMany(mappedBy = "team")
+    @Getter(AccessLevel.PROTECTED)
+    private Set<Player> players = new HashSet<>();
+
+    public Set<Player> getAllPlayers() {
+        return Collections.unmodifiableSet(players);
+    }
+
+    public void addPlayer(Player player) {
+        players.add(player);
+        player.setTeam(this);
+    }
+
+    public void deletePlayer(Player player) {
+        players.remove(player);
+        player.setTeam(null);
+    }
 }
