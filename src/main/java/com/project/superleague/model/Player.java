@@ -11,7 +11,6 @@ import java.util.Set;
 @Entity
 @Table(name = "Players")
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 public class Player extends AbstractEntity {
@@ -54,5 +53,17 @@ public class Player extends AbstractEntity {
 
     public Set<MatchPlayer> getAllMatchesPlayers() {
         return Collections.unmodifiableSet(matchesPlayers);
+    }
+
+    public Player(Long id, String firstname, String lastname, Date dateOfBirth, String nationality, int monetaryValue, String playerRole, Team team, Set<MatchPlayer> matchesPlayers) {
+        setId(id);
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.dateOfBirth = dateOfBirth;
+        this.nationality = nationality;
+        this.monetaryValue = monetaryValue;
+        this.playerRole = playerRole;
+        this.team = team;
+        this.matchesPlayers = matchesPlayers;
     }
 }
