@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -86,11 +87,32 @@ public class PlayerServiceImpl implements IPlayerService {
 
     @Override
     public List<Player> getPlayerByLastname(String lastname) throws EntityNotFoundException {
-        return null;
+        List<Player> players = new ArrayList<>();
+
+        try {
+            players = playerRepository.findByLastnameStartingWith(lastname);
+            if (players.isEmpty()) {
+                throw new EntityNotFoundException(Player.class, 0L);
+            }
+            log.info("Players starting with " + lastname + " were found.");
+        } catch (EntityNotFoundException e) {
+            log.error(e.getMessage());
+            throw e;
+        }
+        return players;
     }
 
     @Override
     public Player getPlayerById(Long id) throws EntityNotFoundException {
-        return null;
+        Player player;
+
+        try {
+            player = playerRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(Player.class, id));
+            log.info("Search by id " + id + " was successful");
+        } catch (EntityNotFoundException e) {
+            log.error(e.getMessage());
+            throw e;
+        }
+        return player;
     }
 }
