@@ -55,7 +55,7 @@ public class Player extends AbstractEntity {
         return Collections.unmodifiableSet(matchesPlayers);
     }
 
-    public Player(Long id, String firstname, String lastname, Date dateOfBirth, String nationality, int monetaryValue, String playerRole, Team team, Set<MatchPlayer> matchesPlayers) {
+    public Player(Long id, String firstname, String lastname, Date dateOfBirth, String nationality, int monetaryValue, String playerRole, Team team) {
         setId(id);
         this.firstname = firstname;
         this.lastname = lastname;
@@ -64,6 +64,5 @@ public class Player extends AbstractEntity {
         this.monetaryValue = monetaryValue;
         this.playerRole = playerRole;
         this.team = team;
-        this.matchesPlayers = matchesPlayers;
     }
 }

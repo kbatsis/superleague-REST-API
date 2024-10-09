@@ -16,11 +16,11 @@ public class Mapper {
     private Mapper() {}
 
     public static Player mapInsertDTOToPlayer(PlayerInsertDTO dto, Team team) {
-        return new Player(null, dto.getFirstname(), dto.getLastname(), dto.getDateOfBirth(), dto.getNationality(), dto.getMonetaryValue(), dto.getPlayerRole(), team, new HashSet<MatchPlayer>());
+        return new Player(null, dto.getFirstname(), dto.getLastname(), dto.getDateOfBirth(), dto.getNationality(), dto.getMonetaryValue(), dto.getPlayerRole(), team);
     }
 
-    public static Player mapUpdateDTOToPlayer(PlayerUpdateDTO dto, Team team, Set<MatchPlayer> matchesPlayers) {
-        return new Player(dto.getId(), dto.getFirstname(), dto.getLastname(), dto.getDateOfBirth(), dto.getNationality(), dto.getMonetaryValue(), dto.getPlayerRole(), team, matchesPlayers);
+    public static Player mapUpdateDTOToPlayer(PlayerUpdateDTO dto, Team team) {
+        return new Player(dto.getId(), dto.getFirstname(), dto.getLastname(), dto.getDateOfBirth(), dto.getNationality(), dto.getMonetaryValue(), dto.getPlayerRole(), team);
     }
 
     public static PlayerReadOnlyDTO mapPlayerToReadOnlyDTO(Player player) {

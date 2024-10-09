@@ -59,8 +59,7 @@ public class PlayerServiceImpl implements IPlayerService {
             //    team = teamRepository.findByTeamName(dto.getTeamName()).orElse(null);
             //}
             player = playerRepository.findById(dto.getId()).orElseThrow(() -> new EntityNotFoundException(Player.class, dto.getId()));
-            matchPlayer = new HashSet<>(player.getAllMatchesPlayers());
-            updatedPlayer = playerRepository.save(Mapper.mapUpdateDTOToPlayer(dto, team, matchPlayer));
+            updatedPlayer = playerRepository.save(Mapper.mapUpdateDTOToPlayer(dto, team));
             log.info("Update successful.");
         } catch (EntityNotFoundException e) {
             log.error(e.getMessage());
