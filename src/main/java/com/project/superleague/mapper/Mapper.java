@@ -1,8 +1,6 @@
 package com.project.superleague.mapper;
 
-import com.project.superleague.dto.PlayerInsertDTO;
-import com.project.superleague.dto.PlayerReadOnlyDTO;
-import com.project.superleague.dto.PlayerUpdateDTO;
+import com.project.superleague.dto.*;
 import com.project.superleague.model.MatchPlayer;
 import com.project.superleague.model.Player;
 import com.project.superleague.model.Team;
@@ -30,5 +28,13 @@ public class Mapper {
         }
 
         return new PlayerReadOnlyDTO(player.getId(), player.getDateOfBirth(), player.getFirstname(), player.getLastname(), player.getMonetaryValue(), player.getNationality(), player.getPlayerRole(), teamName);
+    }
+
+    public static Team mapInsertDTOtoTeam(TeamInsertDTO dto) {
+        return new Team(null, dto.getTeamName(), dto.getFoundationYear(), dto.getCityName(), dto.getStadiumName(), dto.getCoachFirstname(), dto.getCoachLastname(), dto.getPresidentFirstname(),dto.getPresidentLastname());
+    }
+
+    public static Team mapUpdateDTOtoTeam(TeamUpdateDTO dto) {
+        return new Team(dto.getId(), dto.getTeamName(), dto.getFoundationYear(), dto.getCityName(), dto.getStadiumName(), dto.getCoachFirstname(), dto.getCoachLastname(), dto.getPresidentFirstname(),dto.getPresidentLastname());
     }
 }

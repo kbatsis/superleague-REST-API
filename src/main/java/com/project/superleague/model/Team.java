@@ -10,7 +10,6 @@ import java.util.Set;
 @Entity
 @Table(name = "Teams")
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 public class Team extends AbstractEntity {
@@ -70,5 +69,17 @@ public class Team extends AbstractEntity {
     public void deletePlayer(Player player) {
         players.remove(player);
         player.setTeam(null);
+    }
+
+    public Team(Long id, String teamName, int foundationYear, String cityName, String stadiumName, String coachFirstname, String coachLastname, String presidentFirstname, String presidentLastname) {
+        setId(id);
+        this.teamName = teamName;
+        this.foundationYear = foundationYear;
+        this.cityName = cityName;
+        this.stadiumName = stadiumName;
+        this.coachFirstname = coachFirstname;
+        this.coachLastname = coachLastname;
+        this.presidentFirstname = presidentFirstname;
+        this.presidentLastname = presidentLastname;
     }
 }

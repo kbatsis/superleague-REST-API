@@ -7,6 +7,7 @@ import com.project.superleague.model.MatchPlayer;
 import com.project.superleague.model.Player;
 import com.project.superleague.model.Team;
 import com.project.superleague.repository.PlayerRepository;
+import com.project.superleague.repository.TeamRepository;
 import com.project.superleague.service.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class PlayerServiceImpl implements IPlayerService {
     private final PlayerRepository playerRepository;
+    private final TeamRepository teamRepository;
 
     @Transactional
     @Override
@@ -31,9 +33,9 @@ public class PlayerServiceImpl implements IPlayerService {
         Team team = null;
 
         try {
-            //if (dto.getTeamName() != null) {
-            //    team = teamRepository.findByTeamName(dto.getTeamName()).orElse(null);
-            //}
+            if (dto.getTeamName() != null) {
+                team = teamRepository.findByTeamNameStartingWith(dto.getTeamName()).get(0);
+            }
             player = playerRepository.save(Mapper.mapInsertDTOToPlayer(dto, team));
             if (player.getId() == null) {
                 throw new Exception("Insert error.");
@@ -49,16 +51,14 @@ public class PlayerServiceImpl implements IPlayerService {
     @Transactional
     @Override
     public Player updatePlayer(PlayerUpdateDTO dto) throws EntityNotFoundException {
-        Player player;
         Player updatedPlayer;
         Team team = null;
-        Set<MatchPlayer> matchPlayer;
 
         try {
-            //if (dto.getTeamName() != null) {
-            //    team = teamRepository.findByTeamName(dto.getTeamName()).orElse(null);
-            //}
-            player = playerRepository.findById(dto.getId()).orElseThrow(() -> new EntityNotFoundException(Player.class, dto.getId()));
+            if (dto.getTeamName() != null) {
+                team = teamRepository.findByTeamNameStartingWith(dto.getTeamName()).get(0);
+            }
+            playerRepository.findById(dto.getId()).orElseThrow(() -> new EntityNotFoundException(Player.class, dto.getId()));
             updatedPlayer = playerRepository.save(Mapper.mapUpdateDTOToPlayer(dto, team));
             log.info("Update successful.");
         } catch (EntityNotFoundException e) {

@@ -11,6 +11,7 @@ import com.project.superleague.service.exception.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -21,6 +22,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -58,9 +60,10 @@ public class PlayerRestController {
     }
 
     @PostMapping("/players")
-    public ResponseEntity<PlayerReadOnlyDTO> addPlayer(@Valid @RequestBody PlayerInsertDTO dto, BindingResult bindingResult) {
+    public ResponseEntity<Object> addPlayer(@Valid @RequestBody PlayerInsertDTO dto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            List<String> errors = bindingResult.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).toList();
+            return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         }
 
         try {
@@ -77,12 +80,13 @@ public class PlayerRestController {
     }
 
     @PutMapping("/players/{id}")
-    public ResponseEntity<PlayerReadOnlyDTO> updatePlayer(@PathVariable("id") Long id, @Valid @RequestBody PlayerUpdateDTO dto, BindingResult bindingResult) {
+    public ResponseEntity<Object> updatePlayer(@PathVariable("id") Long id, @Valid @RequestBody PlayerUpdateDTO dto, BindingResult bindingResult) {
         if (!Objects.equals(id, dto.getId())) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         if (bindingResult.hasErrors()) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            List<String> errors = bindingResult.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).toList();
+            return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         }
 
         try {
