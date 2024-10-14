@@ -14,10 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -33,8 +30,8 @@ public class PlayerServiceImpl implements IPlayerService {
         Team team = null;
 
         try {
-            if (dto.getTeamName() != null) {
-                team = teamRepository.findByTeamNameStartingWith(dto.getTeamName()).get(0);
+            if (dto.getTeamId() != null) {
+                team = teamRepository.findById(dto.getTeamId()).get();
             }
             player = playerRepository.save(Mapper.mapInsertDTOToPlayer(dto, team));
             if (player.getId() == null) {
@@ -55,8 +52,8 @@ public class PlayerServiceImpl implements IPlayerService {
         Team team = null;
 
         try {
-            if (dto.getTeamName() != null) {
-                team = teamRepository.findByTeamNameStartingWith(dto.getTeamName()).get(0);
+            if (dto.getTeamId() != null) {
+                team = teamRepository.findById(dto.getTeamId()).get();
             }
             playerRepository.findById(dto.getId()).orElseThrow(() -> new EntityNotFoundException(Player.class, dto.getId()));
             updatedPlayer = playerRepository.save(Mapper.mapUpdateDTOToPlayer(dto, team));

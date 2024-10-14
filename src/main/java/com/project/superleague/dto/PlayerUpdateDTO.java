@@ -32,6 +32,5 @@ public class PlayerUpdateDTO extends BaseDTO {
     @Size(max = 20)
     private String playerRole;
 
-    @Size(min = 2 , max = 50)
-    private String teamName;
+    private Long teamId;
 }

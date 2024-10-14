@@ -100,4 +100,9 @@ public class TeamServiceImpl implements ITeamService {
         }
         return team;
     }
+
+    @Override
+    public List<Team> getAllTeams() {
+        return teamRepository.findAll();
+    }
 }

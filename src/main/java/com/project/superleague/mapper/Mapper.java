@@ -22,12 +22,13 @@ public class Mapper {
     }
 
     public static PlayerReadOnlyDTO mapPlayerToReadOnlyDTO(Player player) {
-        String teamName = null;
+        Long teamId = null;
+
         if (player.getTeam() != null) {
-            teamName = player.getTeam().getTeamName();
+            teamId = player.getTeam().getId();
         }
 
-        return new PlayerReadOnlyDTO(player.getId(), player.getDateOfBirth(), player.getFirstname(), player.getLastname(), player.getMonetaryValue(), player.getNationality(), player.getPlayerRole(), teamName);
+        return new PlayerReadOnlyDTO(player.getId(), player.getDateOfBirth(), player.getFirstname(), player.getLastname(), player.getMonetaryValue(), player.getNationality(), player.getPlayerRole(), teamId);
     }
 
     public static Team mapInsertDTOtoTeam(TeamInsertDTO dto) {

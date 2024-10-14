@@ -13,4 +13,5 @@ public interface ITeamService {
     Team deleteTeam(Long id) throws EntityNotFoundException;
     List<Team> getTeamByName(String teamname) throws EntityNotFoundException;
     Team getTeamById(Long id) throws EntityNotFoundException;
+    List<Team> getAllTeams();
 }
