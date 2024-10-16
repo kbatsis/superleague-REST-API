@@ -14,11 +14,15 @@ public class Mapper {
     private Mapper() {}
 
     public static Player mapInsertDTOToPlayer(PlayerInsertDTO dto, Team team) {
-        return new Player(null, dto.getFirstname(), dto.getLastname(), dto.getDateOfBirth(), dto.getNationality(), dto.getMonetaryValue(), dto.getPlayerRole(), team);
+        Player player = new Player(null, dto.getFirstname(), dto.getLastname(), dto.getDateOfBirth(), dto.getNationality(), dto.getMonetaryValue(), dto.getPlayerRole()) ;
+        player.addTeam(team);
+        return player;
     }
 
     public static Player mapUpdateDTOToPlayer(PlayerUpdateDTO dto, Team team) {
-        return new Player(dto.getId(), dto.getFirstname(), dto.getLastname(), dto.getDateOfBirth(), dto.getNationality(), dto.getMonetaryValue(), dto.getPlayerRole(), team);
+        Player player = new Player(dto.getId(), dto.getFirstname(), dto.getLastname(), dto.getDateOfBirth(), dto.getNationality(), dto.getMonetaryValue(), dto.getPlayerRole());
+        player.addTeam(team);
+        return player;
     }
 
     public static PlayerReadOnlyDTO mapPlayerToReadOnlyDTO(Player player) {
@@ -37,5 +41,9 @@ public class Mapper {
 
     public static Team mapUpdateDTOtoTeam(TeamUpdateDTO dto) {
         return new Team(dto.getId(), dto.getTeamName(), dto.getFoundationYear(), dto.getCityName(), dto.getStadiumName(), dto.getCoachFirstname(), dto.getCoachLastname(), dto.getPresidentFirstname(),dto.getPresidentLastname());
+    }
+
+    public static TeamReadOnlyDTO mapTeamToReadOnlyDTO(Team team) {
+        return new TeamReadOnlyDTO(team.getId(), team.getTeamName(), team.getFoundationYear(), team.getCityName(), team.getStadiumName(), team.getCoachFirstname(), team.getCoachLastname(), team.getPresidentFirstname(), team.getPresidentLastname());
     }
 }

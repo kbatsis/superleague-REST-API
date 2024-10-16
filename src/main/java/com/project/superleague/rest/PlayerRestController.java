@@ -31,7 +31,7 @@ public class PlayerRestController {
     private final IPlayerService playerService;
 
     @GetMapping("/players")
-    public ResponseEntity<List<PlayerReadOnlyDTO>> getPlayersByLastname(@RequestParam("lastname") String lastname) {
+    public ResponseEntity<Object> getPlayersByLastname(@RequestParam("lastname") String lastname) {
         List<Player> players;
 
         try {
@@ -42,12 +42,12 @@ public class PlayerRestController {
             }
             return new ResponseEntity<>(playersReadOnlyDTOS, HttpStatus.OK);
         } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Not found.", HttpStatus.BAD_REQUEST);
         }
     }
 
     @GetMapping("/players/{id}")
-    public ResponseEntity<PlayerReadOnlyDTO> getPlayerById(@PathVariable("id") Long id) {
+    public ResponseEntity<Object> getPlayerById(@PathVariable("id") Long id) {
         Player player;
 
         try {
@@ -55,7 +55,7 @@ public class PlayerRestController {
             PlayerReadOnlyDTO dto = Mapper.mapPlayerToReadOnlyDTO(player);
             return new ResponseEntity<>(dto, HttpStatus.OK);
         } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Not found.", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -94,18 +94,18 @@ public class PlayerRestController {
             PlayerReadOnlyDTO playerReadOnlyDTO = Mapper.mapPlayerToReadOnlyDTO(player);
             return new ResponseEntity<>(playerReadOnlyDTO, HttpStatus.OK);
         } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Not found.", HttpStatus.BAD_REQUEST);
         }
     }
 
     @DeleteMapping("/players/{id}")
-    public ResponseEntity<PlayerReadOnlyDTO> deletePlayer(@PathVariable("id") Long id) {
+    public ResponseEntity<Object> deletePlayer(@PathVariable("id") Long id) {
         try {
             Player player = playerService.deletePlayer(id);
             PlayerReadOnlyDTO playerReadOnlyDTO = Mapper.mapPlayerToReadOnlyDTO(player);
             return new ResponseEntity<>(playerReadOnlyDTO, HttpStatus.OK);
         } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Not found.", HttpStatus.BAD_REQUEST);
         }
     }
 }

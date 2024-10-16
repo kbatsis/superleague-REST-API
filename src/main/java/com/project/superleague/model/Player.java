@@ -39,7 +39,9 @@ public class Player extends AbstractEntity {
 
     public void addTeam(Team team) {
         setTeam(team);
-        team.getPlayers().add(this);
+        if (team != null) {
+            team.getPlayers().add(this);
+        }
     }
 
     public void deleteTeam(Team team) {
@@ -55,7 +57,7 @@ public class Player extends AbstractEntity {
         return Collections.unmodifiableSet(matchesPlayers);
     }
 
-    public Player(Long id, String firstname, String lastname, Date dateOfBirth, String nationality, int monetaryValue, String playerRole, Team team) {
+    public Player(Long id, String firstname, String lastname, Date dateOfBirth, String nationality, int monetaryValue, String playerRole) {
         setId(id);
         this.firstname = firstname;
         this.lastname = lastname;
@@ -63,6 +65,5 @@ public class Player extends AbstractEntity {
         this.nationality = nationality;
         this.monetaryValue = monetaryValue;
         this.playerRole = playerRole;
-        this.team = team;
     }
 }

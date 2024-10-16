@@ -3,6 +3,7 @@ package com.project.superleague.service;
 import com.project.superleague.dto.TeamInsertDTO;
 import com.project.superleague.dto.TeamUpdateDTO;
 import com.project.superleague.mapper.Mapper;
+import com.project.superleague.model.Player;
 import com.project.superleague.model.Team;
 import com.project.superleague.repository.TeamRepository;
 import com.project.superleague.service.exception.EntityNotFoundException;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @Slf4j
@@ -58,9 +60,14 @@ public class TeamServiceImpl implements ITeamService {
     @Override
     public Team deleteTeam(Long id) throws EntityNotFoundException {
         Team team = null;
+        Set<Player> players;
 
         try {
             team = teamRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(Team.class, id));
+            players = team.getAllPlayers();
+            for (Player player : players) {
+                player.setTeam(null);
+            }
             teamRepository.deleteById(id);
             log.info("Deletion successful.");
         } catch (EntityNotFoundException e) {
