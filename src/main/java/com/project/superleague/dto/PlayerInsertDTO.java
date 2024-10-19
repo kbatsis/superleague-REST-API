@@ -15,8 +15,6 @@ import java.util.Date;
 @Getter
 @Setter
 public class PlayerInsertDTO {
-    private Date dateOfBirth;
-
     @NotNull
     @Size(min = 2, max = 20)
     private String firstname;
@@ -25,10 +23,12 @@ public class PlayerInsertDTO {
     @Size(min = 2, max = 30)
     private String lastname;
 
-    private int monetaryValue;
+    private Date dateOfBirth;
 
     @Size(min = 2, max = 30)
     private String nationality;
+
+    private int monetaryValue;
 
     @Size(max = 20)
     private String playerRole;

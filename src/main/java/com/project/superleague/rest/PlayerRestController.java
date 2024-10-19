@@ -4,8 +4,10 @@ package com.project.superleague.rest;
 import com.project.superleague.dto.PlayerInsertDTO;
 import com.project.superleague.dto.PlayerReadOnlyDTO;
 import com.project.superleague.dto.PlayerUpdateDTO;
+import com.project.superleague.dto.TeamReadOnlyDTO;
 import com.project.superleague.mapper.Mapper;
 import com.project.superleague.model.Player;
+import com.project.superleague.model.Team;
 import com.project.superleague.service.IPlayerService;
 import com.project.superleague.service.exception.EntityNotFoundException;
 import jakarta.validation.Valid;
@@ -57,6 +59,18 @@ public class PlayerRestController {
         } catch (EntityNotFoundException e) {
             return new ResponseEntity<>("Not found.", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @GetMapping("/players/all")
+    public ResponseEntity<List<PlayerReadOnlyDTO>> getAllPlayers() {
+        List<Player> players;
+
+        players = playerService.getAllPlayers();
+        List<PlayerReadOnlyDTO> playersReadOnlyDTOS = new ArrayList<>();
+        for (Player player : players) {
+            playersReadOnlyDTOS.add(Mapper.mapPlayerToReadOnlyDTO(player));
+        }
+        return new ResponseEntity<>(playersReadOnlyDTOS, HttpStatus.OK);
     }
 
     @PostMapping("/players")

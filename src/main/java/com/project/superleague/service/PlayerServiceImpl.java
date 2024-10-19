@@ -49,13 +49,17 @@ public class PlayerServiceImpl implements IPlayerService {
     @Override
     public Player updatePlayer(PlayerUpdateDTO dto) throws EntityNotFoundException {
         Player updatedPlayer;
+        Player player;
         Team team = null;
 
         try {
+            player = playerRepository.findById(dto.getId()).orElseThrow(() -> new EntityNotFoundException(Player.class, dto.getId()));
+            if (player.getTeam() != null) {
+                player.deleteTeam(player.getTeam());
+            }
             if (dto.getTeamId() != null) {
                 team = teamRepository.findById(dto.getTeamId()).get();
             }
-            playerRepository.findById(dto.getId()).orElseThrow(() -> new EntityNotFoundException(Player.class, dto.getId()));
             updatedPlayer = playerRepository.save(Mapper.mapUpdateDTOToPlayer(dto, team));
             log.info("Update successful.");
         } catch (EntityNotFoundException e) {
@@ -110,5 +114,10 @@ public class PlayerServiceImpl implements IPlayerService {
             throw e;
         }
         return player;
+    }
+
+    @Override
+    public List<Player> getAllPlayers() {
+        return playerRepository.findAll();
     }
 }

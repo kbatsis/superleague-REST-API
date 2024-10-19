@@ -11,7 +11,6 @@ import java.util.Set;
 @Entity
 @Table(name = "Matches")
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 public class Match extends AbstractEntity {
@@ -39,7 +38,9 @@ public class Match extends AbstractEntity {
 
     public void addHostTeam(Team team) {
         setHostTeam(team);
-        team.getMatchesHost().add(this);
+        if (team != null) {
+            team.getMatchesHost().add(this);
+        }
     }
 
     public void deleteHostTeam(Team team) {
@@ -53,11 +54,20 @@ public class Match extends AbstractEntity {
 
     public void addGuestTeam(Team team) {
         setGuestTeam(team);
-        team.getMatchesGuest().add(this);
+        if (team != null) {
+            team.getMatchesGuest().add(this);
+        }
     }
 
     public void deleteGuestTeam(Team team) {
         setGuestTeam(null);
         team.getMatchesGuest().remove(this);
+    }
+
+    public Match(Long id, Date matchDate, int goalsHost, int goalsGuest) {
+        setId(id);
+        this.matchDate = matchDate;
+        this.goalsHost = goalsHost;
+        this.goalsGuest = goalsGuest;
     }
 }

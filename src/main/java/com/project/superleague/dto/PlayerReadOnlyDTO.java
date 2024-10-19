@@ -10,11 +10,11 @@ import java.util.Date;
 @Getter
 @Setter
 public class PlayerReadOnlyDTO extends BaseDTO {
-    private Date dateOfBirth;
     private String firstname;
     private String lastname;
-    private int monetaryValue;
+    private Date dateOfBirth;
     private String nationality;
+    private int monetaryValue;
     private String playerRole;
     private Long teamId;
 

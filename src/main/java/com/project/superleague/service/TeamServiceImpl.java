@@ -3,6 +3,7 @@ package com.project.superleague.service;
 import com.project.superleague.dto.TeamInsertDTO;
 import com.project.superleague.dto.TeamUpdateDTO;
 import com.project.superleague.mapper.Mapper;
+import com.project.superleague.model.Match;
 import com.project.superleague.model.Player;
 import com.project.superleague.model.Team;
 import com.project.superleague.repository.TeamRepository;
@@ -28,7 +29,7 @@ public class TeamServiceImpl implements ITeamService {
         Team team = null;
 
         try {
-            team = teamRepository.save(Mapper.mapInsertDTOtoTeam(dto));
+            team = teamRepository.save(Mapper.mapInsertDTOToTeam(dto));
             if (team.getId() == null) {
                 throw new Exception("Insert error.");
             }
@@ -47,7 +48,7 @@ public class TeamServiceImpl implements ITeamService {
 
         try {
             teamRepository.findById(dto.getId()).orElseThrow(() -> new EntityNotFoundException(Team.class, dto.getId()));
-            updatedTeam = teamRepository.save(Mapper.mapUpdateDTOtoTeam(dto));
+            updatedTeam = teamRepository.save(Mapper.mapUpdateDTOToTeam(dto));
             log.info("Update successful.");
         } catch (EntityNotFoundException e) {
             log.error(e.getMessage());
@@ -61,12 +62,22 @@ public class TeamServiceImpl implements ITeamService {
     public Team deleteTeam(Long id) throws EntityNotFoundException {
         Team team = null;
         Set<Player> players;
+        Set<Match> matchesHost;
+        Set<Match> matchesGuest;
 
         try {
             team = teamRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(Team.class, id));
             players = team.getAllPlayers();
+            matchesHost = team.getAllMatchesHost();
+            matchesGuest = team.getAllMatchesGuest();
             for (Player player : players) {
                 player.setTeam(null);
+            }
+            for (Match match : matchesHost) {
+                match.setHostTeam(null);
+            }
+            for (Match match : matchesGuest) {
+                match.setGuestTeam(null);
             }
             teamRepository.deleteById(id);
             log.info("Deletion successful.");
