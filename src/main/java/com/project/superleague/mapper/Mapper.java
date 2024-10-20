@@ -55,4 +55,19 @@ public class Mapper {
         match.addGuestTeam(guestTeam);
         return match;
     }
+
+    public static MatchReadOnlyDTO mapMatchToReadOnlyDTO(Match match) {
+        Long hostTeamId = null;
+        Long guestTeamId = null;
+
+        if (match.getHostTeam() != null) {
+            hostTeamId = match.getHostTeam().getId();
+        }
+
+        if (match.getGuestTeam() != null) {
+            guestTeamId = match.getGuestTeam().getId();
+        }
+
+        return new MatchReadOnlyDTO(match.getId(), match.getMatchDate(), match.getGoalsHost(), match.getGoalsGuest(), hostTeamId, guestTeamId);
+    }
 }
