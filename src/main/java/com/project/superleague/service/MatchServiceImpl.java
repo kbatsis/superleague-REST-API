@@ -4,7 +4,6 @@ import com.project.superleague.dto.MatchInsertDTO;
 import com.project.superleague.dto.MatchUpdateDTO;
 import com.project.superleague.mapper.Mapper;
 import com.project.superleague.model.Match;
-import com.project.superleague.model.Player;
 import com.project.superleague.model.Team;
 import com.project.superleague.repository.MatchRepository;
 import com.project.superleague.repository.TeamRepository;
@@ -33,12 +32,8 @@ public class MatchServiceImpl implements IMatchService {
         Team guestTeam = null;
 
         try {
-            if (dto.getHostTeamId() != null) {
-                hostTeam = teamRepository.findById(dto.getHostTeamId()).get();
-            }
-            if (dto.getGuestTeamId() != null) {
-                guestTeam = teamRepository.findById(dto.getGuestTeamId()).get();
-            }
+            hostTeam = teamRepository.findById(dto.getHostTeamId()).get();
+            guestTeam = teamRepository.findById(dto.getGuestTeamId()).get();
             match = matchRepository.save(Mapper.mapInsertDTOToMatch(dto, hostTeam, guestTeam));
             if (match.getId() == null) {
                 throw new Exception("Insert error.");
@@ -61,18 +56,10 @@ public class MatchServiceImpl implements IMatchService {
 
         try {
             match = matchRepository.findById(dto.getId()).orElseThrow(() -> new EntityNotFoundException(Match.class, dto.getId()));
-            if (match.getHostTeam() != null) {
-                match.deleteHostTeam(match.getHostTeam());
-            }
-            if (match.getGuestTeam() != null) {
-                match.deleteGuestTeam(match.getGuestTeam());
-            }
-            if (dto.getHostTeamId() != null) {
-                hostTeam = teamRepository.findById(dto.getHostTeamId()).get();
-            }
-            if (dto.getGuestTeamId() != null) {
-                guestTeam = teamRepository.findById(dto.getGuestTeamId()).get();
-            }
+            match.deleteHostTeam(match.getHostTeam());
+            match.deleteGuestTeam(match.getGuestTeam());
+            hostTeam = teamRepository.findById(dto.getHostTeamId()).get();
+            guestTeam = teamRepository.findById(dto.getGuestTeamId()).get();
             updatedMatch = matchRepository.save(Mapper.mapUpdateDTOToMatch(dto, hostTeam, guestTeam));
             log.info("Update successful.");
         } catch (EntityNotFoundException e) {

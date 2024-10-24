@@ -16,7 +16,7 @@ public class TeamInsertDTO {
     @Size(min = 2, max = 50)
     private String teamName;
 
-    private int foundationYear;
+    private Integer foundationYear;
 
     @NotNull
     @Size(min = 2, max = 30)

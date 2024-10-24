@@ -28,7 +28,7 @@ public class PlayerInsertDTO {
     @Size(min = 2, max = 30)
     private String nationality;
 
-    private int monetaryValue;
+    private Integer monetaryValue;
 
     @Size(max = 20)
     private String playerRole;

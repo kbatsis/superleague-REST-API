@@ -8,6 +8,7 @@ import com.project.superleague.service.exception.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -27,7 +28,7 @@ public class MatchRestController {
     private final IMatchService matchService;
 
     @GetMapping("/matches")
-    public ResponseEntity<Object> getMatchesByDate(@RequestParam("date") Date date) {
+    public ResponseEntity<Object> getMatchesByDate(@RequestParam("date") @DateTimeFormat(pattern = "ddMMyyyy") Date date) {
         List<Match> matches;
 
         try {

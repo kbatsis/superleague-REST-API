@@ -18,11 +18,11 @@ public class Match extends AbstractEntity {
     @Temporal(TemporalType.DATE)
     private Date matchDate;
 
-    @Column(name = "GoalsHost")
-    private int goalsHost;
+    @Column(name = "GoalsHost", nullable = false)
+    private Integer goalsHost;
 
-    @Column(name = "GoalsGuest")
-    private int goalsGuest;
+    @Column(name = "GoalsGuest", nullable = false)
+    private Integer goalsGuest;
 
     @OneToMany(mappedBy = "match")
     @Getter(AccessLevel.PROTECTED)
@@ -33,14 +33,12 @@ public class Match extends AbstractEntity {
     }
 
     @ManyToOne
-    @JoinColumn(name = "HostTeam", referencedColumnName = "id")
+    @JoinColumn(name = "HostTeam", referencedColumnName = "id", nullable = false)
     private Team hostTeam;
 
     public void addHostTeam(Team team) {
         setHostTeam(team);
-        if (team != null) {
-            team.getMatchesHost().add(this);
-        }
+        team.getMatchesHost().add(this);
     }
 
     public void deleteHostTeam(Team team) {
@@ -49,14 +47,12 @@ public class Match extends AbstractEntity {
     }
 
     @ManyToOne
-    @JoinColumn(name = "GuestTeam", referencedColumnName = "id")
+    @JoinColumn(name = "GuestTeam", referencedColumnName = "id", nullable = false)
     private Team guestTeam;
 
     public void addGuestTeam(Team team) {
         setGuestTeam(team);
-        if (team != null) {
-            team.getMatchesGuest().add(this);
-        }
+        team.getMatchesGuest().add(this);
     }
 
     public void deleteGuestTeam(Team team) {
@@ -64,7 +60,7 @@ public class Match extends AbstractEntity {
         team.getMatchesGuest().remove(this);
     }
 
-    public Match(Long id, Date matchDate, int goalsHost, int goalsGuest) {
+    public Match(Long id, Date matchDate, Integer goalsHost, Integer goalsGuest) {
         setId(id);
         this.matchDate = matchDate;
         this.goalsHost = goalsHost;

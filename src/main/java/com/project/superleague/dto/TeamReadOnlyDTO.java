@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 public class TeamReadOnlyDTO extends BaseDTO {
     private String teamName;
-    private int foundationYear;
+    private Integer foundationYear;
     private String cityName;
     private String stadiumName;
     private String coachFirstname;
@@ -17,7 +17,7 @@ public class TeamReadOnlyDTO extends BaseDTO {
     private String presidentFirstname;
     private String presidentLastname;
 
-    public TeamReadOnlyDTO(Long id, String teamName, int foundationYear, String cityName, String stadiumName, String coachFirstname, String coachLastname, String presidentFirstname, String presidentLastname) {
+    public TeamReadOnlyDTO(Long id, String teamName, Integer foundationYear, String cityName, String stadiumName, String coachFirstname, String coachLastname, String presidentFirstname, String presidentLastname) {
         setId(id);
         this.teamName = teamName;
         this.foundationYear = foundationYear;

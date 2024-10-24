@@ -16,11 +16,15 @@ public class MatchUpdateDTO extends BaseDTO {
     @NotNull
     private Date matchDate;
 
-    private int goalsHost;
+    @NotNull
+    private Integer goalsHost;
 
-    private int goalsGuest;
+    @NotNull
+    private Integer goalsGuest;
 
+    @NotNull
     private Long hostTeamId;
 
+    @NotNull
     private Long guestTeamId;
 }

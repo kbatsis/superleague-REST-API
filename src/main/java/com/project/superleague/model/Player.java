@@ -28,7 +28,7 @@ public class Player extends AbstractEntity {
     private String nationality;
 
     @Column(name = "MonetaryValue")
-    private int monetaryValue;
+    private Integer monetaryValue;
 
     @Column(name = "PlayerRole", length = 20)
     private String playerRole;
@@ -57,7 +57,7 @@ public class Player extends AbstractEntity {
         return Collections.unmodifiableSet(matchesPlayers);
     }
 
-    public Player(Long id, String firstname, String lastname, Date dateOfBirth, String nationality, int monetaryValue, String playerRole) {
+    public Player(Long id, String firstname, String lastname, Date dateOfBirth, String nationality, Integer monetaryValue, String playerRole) {
         setId(id);
         this.firstname = firstname;
         this.lastname = lastname;

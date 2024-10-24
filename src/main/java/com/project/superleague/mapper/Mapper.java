@@ -60,14 +60,8 @@ public class Mapper {
         Long hostTeamId = null;
         Long guestTeamId = null;
 
-        if (match.getHostTeam() != null) {
-            hostTeamId = match.getHostTeam().getId();
-        }
-
-        if (match.getGuestTeam() != null) {
-            guestTeamId = match.getGuestTeam().getId();
-        }
-
+        hostTeamId = match.getHostTeam().getId();
+        guestTeamId = match.getGuestTeam().getId();
         return new MatchReadOnlyDTO(match.getId(), match.getMatchDate(), match.getGoalsHost(), match.getGoalsGuest(), hostTeamId, guestTeamId);
     }
 }

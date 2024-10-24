@@ -17,7 +17,7 @@ public class Team extends AbstractEntity {
     private String teamName;
 
     @Column(name = "FoundationYear")
-    private int foundationYear;
+    private Integer foundationYear;
 
     @Column(name = "CityName", length = 30, nullable = false)
     private String cityName;
@@ -37,7 +37,7 @@ public class Team extends AbstractEntity {
     @Column(name = "PresidentLastname", length = 30)
     private String presidentLastname;
 
-    @OneToMany(mappedBy = "hostTeam")
+    @OneToMany(mappedBy = "hostTeam", cascade = CascadeType.REMOVE)
     @Getter(AccessLevel.PROTECTED)
     private Set<Match> matchesHost = new HashSet<>();
 
@@ -45,7 +45,7 @@ public class Team extends AbstractEntity {
         return Collections.unmodifiableSet(matchesHost);
     }
 
-    @OneToMany(mappedBy = "guestTeam")
+    @OneToMany(mappedBy = "guestTeam", cascade = CascadeType.REMOVE)
     @Getter(AccessLevel.PROTECTED)
     private Set<Match> matchesGuest= new HashSet<>();
 
@@ -71,7 +71,7 @@ public class Team extends AbstractEntity {
         player.setTeam(null);
     }
 
-    public Team(Long id, String teamName, int foundationYear, String cityName, String stadiumName, String coachFirstname, String coachLastname, String presidentFirstname, String presidentLastname) {
+    public Team(Long id, String teamName, Integer foundationYear, String cityName, String stadiumName, String coachFirstname, String coachLastname, String presidentFirstname, String presidentLastname) {
         setId(id);
         this.teamName = teamName;
         this.foundationYear = foundationYear;

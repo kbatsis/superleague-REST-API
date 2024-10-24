@@ -62,22 +62,12 @@ public class TeamServiceImpl implements ITeamService {
     public Team deleteTeam(Long id) throws EntityNotFoundException {
         Team team = null;
         Set<Player> players;
-        Set<Match> matchesHost;
-        Set<Match> matchesGuest;
 
         try {
             team = teamRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(Team.class, id));
             players = team.getAllPlayers();
-            matchesHost = team.getAllMatchesHost();
-            matchesGuest = team.getAllMatchesGuest();
             for (Player player : players) {
                 player.setTeam(null);
-            }
-            for (Match match : matchesHost) {
-                match.setHostTeam(null);
-            }
-            for (Match match : matchesGuest) {
-                match.setGuestTeam(null);
             }
             teamRepository.deleteById(id);
             log.info("Deletion successful.");

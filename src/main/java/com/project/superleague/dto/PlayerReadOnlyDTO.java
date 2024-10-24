@@ -14,11 +14,11 @@ public class PlayerReadOnlyDTO extends BaseDTO {
     private String lastname;
     private Date dateOfBirth;
     private String nationality;
-    private int monetaryValue;
+    private Integer monetaryValue;
     private String playerRole;
     private Long teamId;
 
-    public PlayerReadOnlyDTO(Long id, Date dateOfBirth, String firstname, String lastname, int monetaryValue, String nationality, String playerRole, Long teamId) {
+    public PlayerReadOnlyDTO(Long id, Date dateOfBirth, String firstname, String lastname, Integer monetaryValue, String nationality, String playerRole, Long teamId) {
         setId(id);
         this.dateOfBirth = dateOfBirth;
         this.firstname = firstname;
