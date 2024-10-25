@@ -2,6 +2,7 @@ package com.project.superleague.mapper;
 
 import com.project.superleague.dto.*;
 import com.project.superleague.model.Match;
+import com.project.superleague.model.MatchPlayer;
 import com.project.superleague.model.Player;
 import com.project.superleague.model.Team;
 
@@ -63,5 +64,19 @@ public class Mapper {
         hostTeamId = match.getHostTeam().getId();
         guestTeamId = match.getGuestTeam().getId();
         return new MatchReadOnlyDTO(match.getId(), match.getMatchDate(), match.getGoalsHost(), match.getGoalsGuest(), hostTeamId, guestTeamId);
+    }
+
+    public static MatchPlayer mapInsertDTOToMatchPlayer(MatchPlayerInsertDTO dto, Match match, Player player) {
+        MatchPlayer matchPlayer = new MatchPlayer(dto.getPlayTime(), dto.getGoals(), dto.getAssists(), dto.getCards());
+        matchPlayer.addMatch(match);
+        matchPlayer.addPlayer(player);
+        return matchPlayer;
+    }
+
+    public static MatchPlayer mapUpdateDTOToMatchPlayer(MatchPlayerUpdateDTO dto, Match match, Player player) {
+        MatchPlayer matchPlayer = new MatchPlayer(dto.getPlayTime(), dto.getGoals(), dto.getAssists(), dto.getCards());
+        matchPlayer.setMatch(match);
+        matchPlayer.setPlayer(player);
+        return matchPlayer;
     }
 }

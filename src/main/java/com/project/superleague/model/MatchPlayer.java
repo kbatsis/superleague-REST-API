@@ -9,7 +9,6 @@ import lombok.Setter;
 @Entity
 @Table(name = "MatchesPlayers")
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 public class MatchPlayer {
@@ -37,14 +36,21 @@ public class MatchPlayer {
     }
 
     @Column(name = "PlayTime")
-    private int playTime;
+    private Integer playTime;
 
     @Column(name = "Goals")
-    private int goals;
+    private Integer goals;
 
     @Column(name = "Assists")
-    private int assists;
+    private Integer assists;
 
     @Column(name = "Cards")
-    private int cards;
+    private Integer cards;
+
+    public MatchPlayer(Integer playTime, Integer goals, Integer assists, Integer cards) {
+        this.playTime = playTime;
+        this.goals = goals;
+        this.assists = assists;
+        this.cards = cards;
+    }
 }
