@@ -14,5 +14,4 @@ public interface IMatchService {
     Match deleteMatch(Long id) throws EntityNotFoundException;
     List<Match> getMatchByDate(Date date) throws EntityNotFoundException;
     Match getMatchById(Long id) throws EntityNotFoundException;
-    List<Match> getAllMatches();
 }

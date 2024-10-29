@@ -65,13 +65,33 @@ public class MatchPlayerServiceImpl implements IMatchPlayerService {
         return updatedMatchPlayer;
     }
 
+    @Transactional
     @Override
     public MatchPlayer deleteMatchPlayer(Long matchId, Long playerId) throws EntityNotFoundException {
-        return null;
+        MatchPlayer matchPlayer = null;
+
+        try {
+            matchPlayer = matchPlayerRepository.findByMatchIdAndPlayerId(matchId, playerId).orElseThrow(() -> new EntityNotFoundException(MatchPlayer.class, 0L));
+            matchPlayerRepository.deleteByMatchIdAndPlayerId(matchId, playerId);
+            log.info("Deletion successful.");
+        } catch (EntityNotFoundException e) {
+            log.error(e.getMessage());
+            throw e;
+        }
+        return matchPlayer;
     }
 
     @Override
-    public MatchPlayer getMatchPlayerByMatchId(Long matchId) throws EntityNotFoundException {
-        return null;
+    public MatchPlayer getMatchPlayerByMatchIdAndPlayerId(Long matchId, Long playerId) throws EntityNotFoundException {
+        MatchPlayer matchPlayer;
+
+        try {
+            matchPlayer = matchPlayerRepository.findByMatchIdAndPlayerId(matchId, playerId).orElseThrow(() -> new EntityNotFoundException(MatchPlayer.class, 0L));
+            log.info("Search by id " + matchId + playerId + " was successful");
+        } catch (EntityNotFoundException e) {
+            log.error(e.getMessage());
+            throw e;
+        }
+        return matchPlayer;
     }
 }

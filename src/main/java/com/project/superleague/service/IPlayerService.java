@@ -13,5 +13,4 @@ public interface IPlayerService {
     Player deletePlayer(Long id) throws EntityNotFoundException;
     List<Player> getPlayerByLastname(String lastname) throws EntityNotFoundException;
     Player getPlayerById(Long id) throws EntityNotFoundException;
-    List<Player> getAllPlayers();
 }

@@ -61,18 +61,6 @@ public class PlayerRestController {
         }
     }
 
-    @GetMapping("/players/all")
-    public ResponseEntity<List<PlayerReadOnlyDTO>> getAllPlayers() {
-        List<Player> players;
-
-        players = playerService.getAllPlayers();
-        List<PlayerReadOnlyDTO> playersReadOnlyDTOS = new ArrayList<>();
-        for (Player player : players) {
-            playersReadOnlyDTOS.add(Mapper.mapPlayerToReadOnlyDTO(player));
-        }
-        return new ResponseEntity<>(playersReadOnlyDTOS, HttpStatus.OK);
-    }
-
     @PostMapping("/players")
     public ResponseEntity<Object> addPlayer(@Valid @RequestBody PlayerInsertDTO dto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {

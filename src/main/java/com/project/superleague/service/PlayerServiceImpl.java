@@ -115,9 +115,4 @@ public class PlayerServiceImpl implements IPlayerService {
         }
         return player;
     }
-
-    @Override
-    public List<Player> getAllPlayers() {
-        return playerRepository.findAll();
-    }
 }

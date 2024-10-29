@@ -9,5 +9,5 @@ public interface IMatchPlayerService {
     MatchPlayer insertMatchPlayer(MatchPlayerInsertDTO dto) throws Exception;
     MatchPlayer updateMatchPlayer(MatchPlayerUpdateDTO dto) throws EntityNotFoundException;
     MatchPlayer deleteMatchPlayer(Long matchId, Long playerId) throws EntityNotFoundException;
-    MatchPlayer getMatchPlayerByMatchId(Long matchId) throws EntityNotFoundException;
+    MatchPlayer getMatchPlayerByMatchIdAndPlayerId(Long matchId, Long playerId) throws EntityNotFoundException;
 }

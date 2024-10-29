@@ -56,18 +56,6 @@ public class MatchRestController {
         }
     }
 
-    @GetMapping("/matches/all")
-    public ResponseEntity<List<MatchReadOnlyDTO>> getAllMatches() {
-        List<Match> matches;
-
-        matches = matchService.getAllMatches();
-        List<MatchReadOnlyDTO> matchesReadOnlyDTOS = new ArrayList<>();
-        for (Match match : matches) {
-            matchesReadOnlyDTOS.add(Mapper.mapMatchToReadOnlyDTO(match));
-        }
-        return new ResponseEntity<>(matchesReadOnlyDTOS, HttpStatus.OK);
-    }
-
     @PostMapping("/matches")
     public ResponseEntity<Object> addMatch(@Valid @RequestBody MatchInsertDTO dto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {

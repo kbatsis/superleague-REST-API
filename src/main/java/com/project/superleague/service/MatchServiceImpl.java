@@ -115,9 +115,4 @@ public class MatchServiceImpl implements IMatchService {
         }
         return match;
     }
-
-    @Override
-    public List<Match> getAllMatches() {
-        return matchRepository.findAll();
-    }
 }

@@ -55,18 +55,6 @@ public class TeamRestController {
         }
     }
 
-    @GetMapping("/teams/all")
-    public ResponseEntity<List<TeamReadOnlyDTO>> getAllTeams() {
-        List<Team> teams;
-
-        teams = teamService.getAllTeams();
-        List<TeamReadOnlyDTO> teamsReadOnlyDTOS = new ArrayList<>();
-        for (Team team : teams) {
-            teamsReadOnlyDTOS.add(Mapper.mapTeamToReadOnlyDTO(team));
-        }
-        return new ResponseEntity<>(teamsReadOnlyDTOS, HttpStatus.OK);
-    }
-
     @PostMapping("/teams")
     public ResponseEntity<Object> addTeam(@Valid @RequestBody TeamInsertDTO dto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
