@@ -79,4 +79,11 @@ public class Mapper {
         matchPlayer.setPlayer(player);
         return matchPlayer;
     }
+
+    public static MatchPlayerReadOnlyDTO mapMatchPlayerToReadOnlyDTO(MatchPlayer matchPlayer) {
+        Long matchId = matchPlayer.getMatch().getId();
+        Long playerId = matchPlayer.getPlayer().getId();
+
+        return new MatchPlayerReadOnlyDTO(matchId, playerId, matchPlayer.getPlayTime(), matchPlayer.getGoals(), matchPlayer.getAssists(), matchPlayer.getCards());
+    }
 }
