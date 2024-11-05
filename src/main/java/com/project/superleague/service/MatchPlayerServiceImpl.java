@@ -9,11 +9,16 @@ import com.project.superleague.model.Player;
 import com.project.superleague.repository.MatchPlayerRepository;
 import com.project.superleague.repository.MatchRepository;
 import com.project.superleague.repository.PlayerRepository;
+import com.project.superleague.service.exception.EntityAlreadyExistsException;
 import com.project.superleague.service.exception.EntityNotFoundException;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -25,19 +30,27 @@ public class MatchPlayerServiceImpl implements IMatchPlayerService {
 
     @Transactional
     @Override
-    public MatchPlayer insertMatchPlayer(MatchPlayerInsertDTO dto) throws Exception {
+    public MatchPlayer insertMatchPlayer(MatchPlayerInsertDTO dto) throws EntityAlreadyExistsException, Exception {
+        Optional<MatchPlayer> existingMatchPlayer = null;
         MatchPlayer matchPlayer = null;
         Match match = null;
         Player player = null;
 
         try {
+            existingMatchPlayer = matchPlayerRepository.findByMatchIdAndPlayerId(dto.getMatchId(), dto.getPlayerId());
+            if (existingMatchPlayer.isPresent()) {
+                throw new EntityAlreadyExistsException(dto.getMatchId(), dto.getPlayerId());
+            }
             match = matchRepository.findById(dto.getMatchId()).get();
             player = playerRepository.findById(dto.getPlayerId()).get();
             matchPlayer = matchPlayerRepository.save(Mapper.mapInsertDTOToMatchPlayer(dto, match, player));
             if (matchPlayer.getId() == null) {
                 throw new Exception("Insert error.");
             }
-            log.info("Inset successful.");
+            log.info("Insert successful.");
+        } catch (EntityAlreadyExistsException e) {
+            log.error(e.getMessage());
+            throw e;
         } catch (Exception e) {
             log.error(e.getMessage());
             throw e;
@@ -53,7 +66,7 @@ public class MatchPlayerServiceImpl implements IMatchPlayerService {
         Player player = null;
 
         try {
-            matchPlayerRepository.findByMatchIdAndPlayerId(dto.getMatchId(), dto.getPlayerId()).orElseThrow(() -> new EntityNotFoundException(MatchPlayer.class, 0L));
+            matchPlayerRepository.findByMatchIdAndPlayerId(dto.getMatchId(), dto.getPlayerId()).orElseThrow(() -> new EntityNotFoundException(MatchPlayer.class, dto.getId()));
             match = matchRepository.findById(dto.getMatchId()).get();
             player = playerRepository.findById(dto.getPlayerId()).get();
             updatedMatchPlayer = matchPlayerRepository.save(Mapper.mapUpdateDTOToMatchPlayer(dto, match, player));

@@ -8,7 +8,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class MatchPlayerReadOnlyDTO {
+public class MatchPlayerReadOnlyDTO extends BaseDTO {
     private Long matchId;
     private Long playerId;
     private Integer playTime;
@@ -16,7 +16,8 @@ public class MatchPlayerReadOnlyDTO {
     private Integer assists;
     private Integer cards;
 
-    public MatchPlayerReadOnlyDTO(Long matchId, Long playerId, Integer playTime, Integer goals, Integer assists, Integer cards) {
+    public MatchPlayerReadOnlyDTO(Long id, Long matchId, Long playerId, Integer playTime, Integer goals, Integer assists, Integer cards) {
+        setId(id);
         this.matchId = matchId;
         this.playerId = playerId;
         this.playTime = playTime;

@@ -7,17 +7,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "MatchesPlayers")
+@Table(name = "MatchesPlayers", uniqueConstraints = { @UniqueConstraint(name = "UniqueMatchAndPlayerId", columnNames = {"MatchId", "PlayerId"})})
 @NoArgsConstructor
 @Getter
 @Setter
-public class MatchPlayer {
-    @EmbeddedId
-    private MatchPlayerId id = new MatchPlayerId();
-
+public class MatchPlayer extends AbstractEntity {
     @ManyToOne
-    @MapsId("matchId")
-    @JoinColumn(name = "MatchId", referencedColumnName = "id")
+    @JoinColumn(name = "MatchId", referencedColumnName = "id", nullable = false)
     private Match match;
 
     public void addMatch(Match match) {
@@ -26,8 +22,7 @@ public class MatchPlayer {
     }
 
     @ManyToOne
-    @MapsId("playerId")
-    @JoinColumn(name = "PlayerId", referencedColumnName = "id")
+    @JoinColumn(name = "PlayerId", referencedColumnName = "id", nullable = false)
     private Player player;
 
     public void addPlayer(Player player) {
@@ -47,7 +42,8 @@ public class MatchPlayer {
     @Column(name = "Cards")
     private Integer cards;
 
-    public MatchPlayer(Integer playTime, Integer goals, Integer assists, Integer cards) {
+    public MatchPlayer(Long id, Integer playTime, Integer goals, Integer assists, Integer cards) {
+        setId(id);
         this.playTime = playTime;
         this.goals = goals;
         this.assists = assists;

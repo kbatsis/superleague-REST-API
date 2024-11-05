@@ -10,7 +10,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class MatchPlayerUpdateDTO {
+public class MatchPlayerUpdateDTO extends BaseDTO {
     @NotNull
     private Long matchId;
 

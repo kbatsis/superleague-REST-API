@@ -67,14 +67,14 @@ public class Mapper {
     }
 
     public static MatchPlayer mapInsertDTOToMatchPlayer(MatchPlayerInsertDTO dto, Match match, Player player) {
-        MatchPlayer matchPlayer = new MatchPlayer(dto.getPlayTime(), dto.getGoals(), dto.getAssists(), dto.getCards());
+        MatchPlayer matchPlayer = new MatchPlayer(null, dto.getPlayTime(), dto.getGoals(), dto.getAssists(), dto.getCards());
         matchPlayer.addMatch(match);
         matchPlayer.addPlayer(player);
         return matchPlayer;
     }
 
     public static MatchPlayer mapUpdateDTOToMatchPlayer(MatchPlayerUpdateDTO dto, Match match, Player player) {
-        MatchPlayer matchPlayer = new MatchPlayer(dto.getPlayTime(), dto.getGoals(), dto.getAssists(), dto.getCards());
+        MatchPlayer matchPlayer = new MatchPlayer(dto.getId(), dto.getPlayTime(), dto.getGoals(), dto.getAssists(), dto.getCards());
         matchPlayer.setMatch(match);
         matchPlayer.setPlayer(player);
         return matchPlayer;
@@ -84,6 +84,6 @@ public class Mapper {
         Long matchId = matchPlayer.getMatch().getId();
         Long playerId = matchPlayer.getPlayer().getId();
 
-        return new MatchPlayerReadOnlyDTO(matchId, playerId, matchPlayer.getPlayTime(), matchPlayer.getGoals(), matchPlayer.getAssists(), matchPlayer.getCards());
+        return new MatchPlayerReadOnlyDTO(matchPlayer.getId(), matchId, playerId, matchPlayer.getPlayTime(), matchPlayer.getGoals(), matchPlayer.getAssists(), matchPlayer.getCards());
     }
 }

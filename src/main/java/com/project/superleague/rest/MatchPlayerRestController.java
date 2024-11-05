@@ -5,6 +5,7 @@ import com.project.superleague.mapper.Mapper;
 import com.project.superleague.model.Match;
 import com.project.superleague.model.MatchPlayer;
 import com.project.superleague.service.IMatchPlayerService;
+import com.project.superleague.service.exception.EntityAlreadyExistsException;
 import com.project.superleague.service.exception.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -53,14 +54,16 @@ public class MatchPlayerRestController {
                     .buildAndExpand(matchPlayerReadOnlyDTO.getMatchId(), matchPlayerReadOnlyDTO.getPlayerId())
                     .toUri();
             return ResponseEntity.created(location).body(matchPlayerReadOnlyDTO);
+        } catch (EntityAlreadyExistsException e) {
+            return new ResponseEntity<>("Record already exists.", HttpStatus.SERVICE_UNAVAILABLE);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE);
         }
     }
 
-    @PutMapping("/matches/{matchId}/{playerId}")
+    @PutMapping("/matchesplayers/{matchId}/{playerId}")
     public ResponseEntity<Object> updateMatchPlayer(@PathVariable("matchId") Long matchId, @PathVariable("playerId") Long playerId, @Valid @RequestBody MatchPlayerUpdateDTO dto, BindingResult bindingResult) {
-        if (!Objects.equals(matchId, dto.getMatchId()) && !Objects.equals(playerId, dto.getPlayerId())) {
+        if (!Objects.equals(matchId, dto.getMatchId()) || !Objects.equals(playerId, dto.getPlayerId())) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         if (bindingResult.hasErrors()) {
