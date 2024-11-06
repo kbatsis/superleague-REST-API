@@ -38,7 +38,7 @@ public class TeamRestController {
             }
             return new ResponseEntity<>(teamsReadOnlyDTOS, HttpStatus.OK);
         } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>("Not found.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -51,7 +51,7 @@ public class TeamRestController {
             TeamReadOnlyDTO dto = Mapper.mapTeamToReadOnlyDTO(team);
             return new ResponseEntity<>(dto, HttpStatus.OK);
         } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>("Not found.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -90,7 +90,7 @@ public class TeamRestController {
             TeamReadOnlyDTO teamReadOnlyDTO = Mapper.mapTeamToReadOnlyDTO(team);
             return new ResponseEntity<>(teamReadOnlyDTO, HttpStatus.OK);
         } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>("Not found.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -101,7 +101,7 @@ public class TeamRestController {
             TeamReadOnlyDTO teamReadOnlyDTO = Mapper.mapTeamToReadOnlyDTO(team);
             return new ResponseEntity<>(teamReadOnlyDTO, HttpStatus.OK);
         } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>("Not found.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 }

@@ -35,7 +35,7 @@ public class MatchPlayerRestController {
             MatchPlayerReadOnlyDTO dto = Mapper.mapMatchPlayerToReadOnlyDTO(matchPlayer);
             return new ResponseEntity<>(dto, HttpStatus.OK);
         } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>("Not found.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -55,7 +55,9 @@ public class MatchPlayerRestController {
                     .toUri();
             return ResponseEntity.created(location).body(matchPlayerReadOnlyDTO);
         } catch (EntityAlreadyExistsException e) {
-            return new ResponseEntity<>("Record already exists.", HttpStatus.SERVICE_UNAVAILABLE);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.SERVICE_UNAVAILABLE);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE);
         }
@@ -76,7 +78,7 @@ public class MatchPlayerRestController {
             MatchPlayerReadOnlyDTO matchPlayerReadOnlyDTO = Mapper.mapMatchPlayerToReadOnlyDTO(matchPlayer);
             return new ResponseEntity<>(matchPlayerReadOnlyDTO, HttpStatus.OK);
         } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>("Not found.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -87,7 +89,7 @@ public class MatchPlayerRestController {
             MatchPlayerReadOnlyDTO matchPlayerReadOnlyDTO = Mapper.mapMatchPlayerToReadOnlyDTO(matchPlayer);
             return new ResponseEntity<>(matchPlayerReadOnlyDTO, HttpStatus.OK);
         } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>("Not found.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 }

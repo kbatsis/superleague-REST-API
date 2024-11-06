@@ -6,4 +6,8 @@ public class EntityNotFoundException extends Exception {
     public EntityNotFoundException(Class<?> entityClass, Long id) {
         super("Entity " + entityClass.getSimpleName() + " with id " + id + " was not found.");
     }
+
+    public EntityNotFoundException(Long matchId, Long playerId) {
+        super("Entity MatchPlayer with match id " + matchId + " and player id " + playerId + " was not found.");
+    }
 }

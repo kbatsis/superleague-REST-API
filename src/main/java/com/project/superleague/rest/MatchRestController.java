@@ -39,7 +39,7 @@ public class MatchRestController {
             }
             return new ResponseEntity<>(matchesReadOnlyDTOS, HttpStatus.OK);
         } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>("Not found.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -52,7 +52,7 @@ public class MatchRestController {
             MatchReadOnlyDTO dto = Mapper.mapMatchToReadOnlyDTO(match);
             return new ResponseEntity<>(dto, HttpStatus.OK);
         } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>("Not found.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -71,6 +71,8 @@ public class MatchRestController {
                     .buildAndExpand(matchReadOnlyDTO.getId())
                     .toUri();
             return ResponseEntity.created(location).body(matchReadOnlyDTO);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE);
         }
@@ -91,7 +93,7 @@ public class MatchRestController {
             MatchReadOnlyDTO matchReadOnlyDTO = Mapper.mapMatchToReadOnlyDTO(match);
             return new ResponseEntity<>(matchReadOnlyDTO, HttpStatus.OK);
         } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>("Not found.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -102,7 +104,7 @@ public class MatchRestController {
             MatchReadOnlyDTO matchReadOnlyDTO = Mapper.mapMatchToReadOnlyDTO(match);
             return new ResponseEntity<>(matchReadOnlyDTO, HttpStatus.OK);
         } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>("Not found.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 }

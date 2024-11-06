@@ -8,7 +8,7 @@ import com.project.superleague.service.exception.EntityNotFoundException;
 import java.util.List;
 
 public interface IPlayerService {
-    Player insertPlayer(PlayerInsertDTO dto) throws Exception;
+    Player insertPlayer(PlayerInsertDTO dto) throws EntityNotFoundException, Exception;
     Player updatePlayer(PlayerUpdateDTO dto) throws EntityNotFoundException;
     Player deletePlayer(Long id) throws EntityNotFoundException;
     List<Player> getPlayerByLastname(String lastname) throws EntityNotFoundException;

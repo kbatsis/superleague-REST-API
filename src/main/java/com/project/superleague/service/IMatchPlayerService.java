@@ -7,7 +7,7 @@ import com.project.superleague.service.exception.EntityAlreadyExistsException;
 import com.project.superleague.service.exception.EntityNotFoundException;
 
 public interface IMatchPlayerService {
-    MatchPlayer insertMatchPlayer(MatchPlayerInsertDTO dto) throws EntityAlreadyExistsException, Exception;
+    MatchPlayer insertMatchPlayer(MatchPlayerInsertDTO dto) throws EntityAlreadyExistsException, EntityNotFoundException, Exception;
     MatchPlayer updateMatchPlayer(MatchPlayerUpdateDTO dto) throws EntityNotFoundException;
     MatchPlayer deleteMatchPlayer(Long matchId, Long playerId) throws EntityNotFoundException;
     MatchPlayer getMatchPlayerByMatchIdAndPlayerId(Long matchId, Long playerId) throws EntityNotFoundException;

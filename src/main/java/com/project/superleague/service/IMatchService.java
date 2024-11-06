@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 public interface IMatchService {
-    Match insertMatch(MatchInsertDTO dto) throws Exception;
+    Match insertMatch(MatchInsertDTO dto) throws EntityNotFoundException, Exception;
     Match updateMatch(MatchUpdateDTO dto) throws EntityNotFoundException;
     Match deleteMatch(Long id) throws EntityNotFoundException;
     List<Match> getMatchByDate(Date date) throws EntityNotFoundException;

@@ -26,19 +26,22 @@ public class MatchServiceImpl implements IMatchService {
 
     @Transactional
     @Override
-    public Match insertMatch(MatchInsertDTO dto) throws Exception {
+    public Match insertMatch(MatchInsertDTO dto) throws EntityNotFoundException, Exception {
         Match match = null;
         Team hostTeam = null;
         Team guestTeam = null;
 
         try {
-            hostTeam = teamRepository.findById(dto.getHostTeamId()).get();
-            guestTeam = teamRepository.findById(dto.getGuestTeamId()).get();
+            hostTeam = teamRepository.findById(dto.getHostTeamId()).orElseThrow(() -> new EntityNotFoundException(Team.class, dto.getHostTeamId()));
+            guestTeam = teamRepository.findById(dto.getGuestTeamId()).orElseThrow(() -> new EntityNotFoundException(Team.class, dto.getGuestTeamId()));
             match = matchRepository.save(Mapper.mapInsertDTOToMatch(dto, hostTeam, guestTeam));
             if (match.getId() == null) {
                 throw new Exception("Insert error.");
             }
             log.info("Insert successful.");
+        } catch (EntityNotFoundException e) {
+            log.error(e.getMessage());
+            throw e;
         } catch (Exception e) {
             log.error(e.getMessage());
             throw e;
@@ -58,8 +61,8 @@ public class MatchServiceImpl implements IMatchService {
             match = matchRepository.findById(dto.getId()).orElseThrow(() -> new EntityNotFoundException(Match.class, dto.getId()));
             match.deleteHostTeam(match.getHostTeam());
             match.deleteGuestTeam(match.getGuestTeam());
-            hostTeam = teamRepository.findById(dto.getHostTeamId()).get();
-            guestTeam = teamRepository.findById(dto.getGuestTeamId()).get();
+            hostTeam = teamRepository.findById(dto.getHostTeamId()).orElseThrow(() -> new EntityNotFoundException(Team.class, dto.getHostTeamId()));
+            guestTeam = teamRepository.findById(dto.getGuestTeamId()).orElseThrow(() -> new EntityNotFoundException(Team.class, dto.getGuestTeamId()));
             updatedMatch = matchRepository.save(Mapper.mapUpdateDTOToMatch(dto, hostTeam, guestTeam));
             log.info("Update successful.");
         } catch (EntityNotFoundException e) {

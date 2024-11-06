@@ -44,7 +44,7 @@ public class PlayerRestController {
             }
             return new ResponseEntity<>(playersReadOnlyDTOS, HttpStatus.OK);
         } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>("Not found.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -57,7 +57,7 @@ public class PlayerRestController {
             PlayerReadOnlyDTO dto = Mapper.mapPlayerToReadOnlyDTO(player);
             return new ResponseEntity<>(dto, HttpStatus.OK);
         } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>("Not found.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -76,6 +76,8 @@ public class PlayerRestController {
                     .buildAndExpand(playerReadOnlyDTO.getId())
                     .toUri();
             return ResponseEntity.created(location).body(playerReadOnlyDTO);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE);
         }
@@ -96,7 +98,7 @@ public class PlayerRestController {
             PlayerReadOnlyDTO playerReadOnlyDTO = Mapper.mapPlayerToReadOnlyDTO(player);
             return new ResponseEntity<>(playerReadOnlyDTO, HttpStatus.OK);
         } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>("Not found.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -107,7 +109,7 @@ public class PlayerRestController {
             PlayerReadOnlyDTO playerReadOnlyDTO = Mapper.mapPlayerToReadOnlyDTO(player);
             return new ResponseEntity<>(playerReadOnlyDTO, HttpStatus.OK);
         } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>("Not found.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 }
