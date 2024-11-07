@@ -49,7 +49,7 @@ public class Player extends AbstractEntity {
         team.getPlayers().remove(this);
     }
 
-    @OneToMany(mappedBy = "player")
+    @OneToMany(mappedBy = "player", cascade = CascadeType.REMOVE)
     @Getter(AccessLevel.PROTECTED)
     private Set<MatchPlayer> matchesPlayers;
 

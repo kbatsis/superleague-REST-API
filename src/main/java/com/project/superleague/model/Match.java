@@ -24,7 +24,7 @@ public class Match extends AbstractEntity {
     @Column(name = "GoalsGuest", nullable = false)
     private Integer goalsGuest;
 
-    @OneToMany(mappedBy = "match")
+    @OneToMany(mappedBy = "match", cascade = CascadeType.REMOVE)
     @Getter(AccessLevel.PROTECTED)
     private Set<MatchPlayer> matchesPlayers = new HashSet<>();
 

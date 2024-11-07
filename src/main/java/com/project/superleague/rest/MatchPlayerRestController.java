@@ -55,7 +55,7 @@ public class MatchPlayerRestController {
                     .toUri();
             return ResponseEntity.created(location).body(matchPlayerReadOnlyDTO);
         } catch (EntityAlreadyExistsException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.SERVICE_UNAVAILABLE);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
