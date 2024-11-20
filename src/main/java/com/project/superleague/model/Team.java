@@ -71,6 +71,7 @@ public class Team extends AbstractEntity {
         player.setTeam(null);
     }
 
+    @Builder
     public Team(Long id, String teamName, Integer foundationYear, String cityName, String stadiumName, String coachFirstname, String coachLastname, String presidentFirstname, String presidentLastname) {
         setId(id);
         this.teamName = teamName;

@@ -57,6 +57,7 @@ public class Player extends AbstractEntity {
         return Collections.unmodifiableSet(matchesPlayers);
     }
 
+    @Builder
     public Player(Long id, String firstname, String lastname, Date dateOfBirth, String nationality, Integer monetaryValue, String playerRole) {
         setId(id);
         this.firstname = firstname;

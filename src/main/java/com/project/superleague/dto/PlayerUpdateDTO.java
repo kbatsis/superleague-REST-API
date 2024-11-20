@@ -2,10 +2,7 @@ package com.project.superleague.dto;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 
@@ -33,4 +30,16 @@ public class PlayerUpdateDTO extends BaseDTO {
     private String playerRole;
 
     private Long teamId;
+
+    @Builder
+    public PlayerUpdateDTO(Long id, String firstname, String lastname, Date dateOfBirth, String nationality, Integer monetaryValue, String playerRole, Long teamId) {
+        setId(id);
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.dateOfBirth = dateOfBirth;
+        this.nationality = nationality;
+        this.monetaryValue = monetaryValue;
+        this.playerRole = playerRole;
+        this.teamId = teamId;
+    }
 }
