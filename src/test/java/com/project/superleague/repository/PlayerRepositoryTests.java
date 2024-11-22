@@ -13,6 +13,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+
 @DataJpaTest
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
 public class PlayerRepositoryTests {
@@ -46,7 +47,7 @@ public class PlayerRepositoryTests {
     }
 
     @Test
-    public void PlayerRepository_FindByLastnameStartingWith_ReturnPlayersNotNull() {
+    public void PlayerRepository_FindByLastnameStartingWith_ReturnsPlayersNotNull() {
         playerRepository.save(player1);
         playerRepository.save(player2);
 
@@ -56,12 +57,22 @@ public class PlayerRepositoryTests {
     }
 
     @Test
-    public void PlayerRepository_FindByLastnameStartingWith_ReturnPlayersEmpty() {
+    public void PlayerRepository_FindByLastnameStartingWith_ReturnsPlayersEmpty() {
         playerRepository.save(player1);
         playerRepository.save(player2);
 
         List<Player> players  = playerRepository.findByLastnameStartingWith("Xatzi");
 
         Assertions.assertThat(players).isEmpty();
+    }
+
+    @Test
+    public void PlayerRepository_FindByLastnameStartingWith_ReturnsAllPlayers() {
+        playerRepository.save(player1);
+        playerRepository.save(player2);
+
+        List<Player> players  = playerRepository.findByLastnameStartingWith("");
+
+        Assertions.assertThat(players.size()).isEqualTo(playerRepository.count());
     }
 }

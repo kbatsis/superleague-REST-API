@@ -1,9 +1,11 @@
-package com.project.superleague.repository;
+package com.project.superleague.service;
 
 import com.project.superleague.dto.PlayerInsertDTO;
 import com.project.superleague.dto.PlayerUpdateDTO;
 import com.project.superleague.model.Player;
 import com.project.superleague.model.Team;
+import com.project.superleague.repository.PlayerRepository;
+import com.project.superleague.repository.TeamRepository;
 import com.project.superleague.service.PlayerServiceImpl;
 import com.project.superleague.service.exception.EntityNotFoundException;
 import org.assertj.core.api.Assertions;
@@ -15,10 +17,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.Optional;
+import java.util.*;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -57,6 +58,7 @@ public class PlayerServiceTests {
                 .build();
 
         updatedPlayer = Player.builder()
+                .id(1L)
                 .firstname("Nikos")
                 .lastname("Papadimitris")
                 .dateOfBirth(new GregorianCalendar(2000, Calendar.FEBRUARY, 23).getTime())
@@ -112,7 +114,7 @@ public class PlayerServiceTests {
     }
 
     @Test
-    public void PlayerService_InsertPlayer_ReturnsException() throws Exception {
+    public void PlayerService_InsertPlayer_ThrowsException() throws Exception {
         when(playerRepository.save(Mockito.any(Player.class))).thenReturn(playerNull);
         when(teamRepository.findById(playerInsertDTO.getTeamId())).thenReturn(Optional.ofNullable(team));
 
@@ -120,7 +122,7 @@ public class PlayerServiceTests {
     }
 
     @Test
-    public void PlayerService_InsertPlayer_ReturnsEntityNotFoundException() throws EntityNotFoundException {
+    public void PlayerService_InsertPlayer_ThrowsEntityNotFoundException() throws EntityNotFoundException {
         when(teamRepository.findById(playerInsertDTO.getTeamId())).thenReturn(Optional.empty());
 
         Assertions.assertThatThrownBy(() -> playerService.insertPlayer(playerInsertDTO)).isInstanceOf(EntityNotFoundException.class);
@@ -139,17 +141,78 @@ public class PlayerServiceTests {
     }
 
     @Test
-    public void PlayerService_UpdatePlayer_ReturnsEntityNotFoundExceptionForPlayer() throws EntityNotFoundException {
+    public void PlayerService_UpdatePlayer_ThrowsEntityNotFoundExceptionForPlayer() throws EntityNotFoundException {
         when(playerRepository.findById(playerUpdateDTO.getId())).thenReturn(Optional.empty());
 
         Assertions.assertThatThrownBy(() -> playerService.updatePlayer(playerUpdateDTO)).isInstanceOf(EntityNotFoundException.class);
     }
 
     @Test
-    public void PlayerService_UpdatePlayer_ReturnsEntityNotFoundExceptionForTeam() throws EntityNotFoundException {
+    public void PlayerService_UpdatePlayer_ThrowsEntityNotFoundExceptionForTeam() throws EntityNotFoundException {
         when(playerRepository.findById(playerUpdateDTO.getId())).thenReturn(Optional.ofNullable(player));
         when(teamRepository.findById(playerInsertDTO.getTeamId())).thenReturn(Optional.empty());
 
         Assertions.assertThatThrownBy(() -> playerService.updatePlayer(playerUpdateDTO)).isInstanceOf(EntityNotFoundException.class);
+    }
+
+    @Test
+    public void PlayerService_DeletePlayer_ReturnsVoid() {
+        Long playerId = 1L;
+
+        when(playerRepository.findById(playerId)).thenReturn(Optional.ofNullable(player));
+
+        assertAll(() -> playerService.deletePlayer(playerId));
+    }
+
+    @Test
+    public void PlayerService_DeletePlayer_ThrowsEntityNotFoundException() {
+        Long playerId = 1L;
+
+        when(playerRepository.findById(playerId)).thenReturn(Optional.empty());
+
+        Assertions.assertThatThrownBy(() -> playerService.deletePlayer(playerId)).isInstanceOf(EntityNotFoundException.class);
+    }
+
+    @Test
+    public void PlayerService_GetPlayerByLastName_ReturnsPlayers() throws EntityNotFoundException {
+        String searchParameter = "Papa";
+        List<Player> players = new ArrayList<>();
+        players.add(player);
+
+        when(playerRepository.findByLastnameStartingWith(searchParameter)).thenReturn(players);
+
+        List<Player> playersReturn = playerService.getPlayerByLastname(searchParameter);
+
+        Assertions.assertThat(playersReturn.size()).isEqualTo(1);
+    }
+
+    @Test
+    public void PlayerService_GetPlayerByLastName_ThrowsEntityNotFoundException() throws EntityNotFoundException {
+        String searchParameter = "Papa";
+        List<Player> players = new ArrayList<>();
+
+        when(playerRepository.findByLastnameStartingWith(searchParameter)).thenReturn(players);
+
+        Assertions.assertThatThrownBy(() -> playerService.getPlayerByLastname(searchParameter)).isInstanceOf(EntityNotFoundException.class);
+    }
+
+    @Test
+    public void PlayerService_GetPlayerById_ReturnsPlayer() throws EntityNotFoundException {
+        Long playerId = 1L;
+
+        when(playerRepository.findById(playerId)).thenReturn(Optional.ofNullable(player));
+
+        Player playerReturn = playerService.getPlayerById(playerId);
+
+        Assertions.assertThat(playerReturn).isNotNull();
+    }
+
+    @Test
+    public void PlayerService_GetPlayerById_ThrowsEntityNotFoundException() throws EntityNotFoundException {
+        Long playerId = 1L;
+
+        when(playerRepository.findById(playerId)).thenReturn(Optional.empty());
+
+        Assertions.assertThatThrownBy(() -> playerService.getPlayerById(playerId)).isInstanceOf(EntityNotFoundException.class);
     }
 }

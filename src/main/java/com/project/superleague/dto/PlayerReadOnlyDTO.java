@@ -1,5 +1,6 @@
 package com.project.superleague.dto;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,6 +19,7 @@ public class PlayerReadOnlyDTO extends BaseDTO {
     private String playerRole;
     private Long teamId;
 
+    @Builder
     public PlayerReadOnlyDTO(Long id, Date dateOfBirth, String firstname, String lastname, Integer monetaryValue, String nationality, String playerRole, Long teamId) {
         setId(id);
         this.dateOfBirth = dateOfBirth;
