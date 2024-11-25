@@ -12,6 +12,7 @@ import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -27,6 +28,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -45,9 +47,11 @@ public class PlayerRestTests {
     private ObjectMapper objectMapper;
 
     private Player player;
+    private Player updatedPlayer;
     private PlayerInsertDTO playerInsertDTO;
+    private PlayerInsertDTO playerInsertDTOInvalid;
     private PlayerUpdateDTO playerUpdateDTO;
-    private PlayerReadOnlyDTO playerReadOnlyDTO;
+    private PlayerUpdateDTO playerUpdateDTOInvalid;
 
     @BeforeEach
     public void init() {
@@ -61,6 +65,16 @@ public class PlayerRestTests {
                 .playerRole("Goalkeeper")
                 .build();
 
+        updatedPlayer = Player.builder()
+                .id(1L)
+                .firstname("Nikos")
+                .lastname("Papadimitris")
+                .dateOfBirth(new GregorianCalendar(2000, Calendar.FEBRUARY, 23).getTime())
+                .nationality("Greek")
+                .monetaryValue(60000)
+                .playerRole("Goalkeeper")
+                .build();
+
         playerInsertDTO = PlayerInsertDTO.builder()
                 .firstname("Nikos")
                 .lastname("Papadimitriou")
@@ -69,6 +83,15 @@ public class PlayerRestTests {
                 .monetaryValue(50000)
                 .playerRole("Goalkeeper")
                 .teamId(1L)
+                .build();
+
+        playerInsertDTOInvalid = PlayerInsertDTO.builder()
+                .firstname("N")
+                .lastname("Papadimitriou")
+                .dateOfBirth(new GregorianCalendar(2000, Calendar.FEBRUARY, 23).getTime())
+                .nationality("Greek")
+                .monetaryValue(50000)
+                .playerRole("Goalkeeper")
                 .build();
 
         playerUpdateDTO = PlayerUpdateDTO.builder()
@@ -82,31 +105,27 @@ public class PlayerRestTests {
                 .teamId(1L)
                 .build();
 
-        playerReadOnlyDTO = PlayerReadOnlyDTO.builder()
+        playerUpdateDTOInvalid = PlayerUpdateDTO.builder()
                 .id(1L)
-                .firstname("Nikos")
+                .firstname("N")
                 .lastname("Papadimitriou")
                 .dateOfBirth(new GregorianCalendar(2000, Calendar.FEBRUARY, 23).getTime())
                 .nationality("Greek")
-                .monetaryValue(60000)
+                .monetaryValue(50000)
                 .playerRole("Goalkeeper")
-                .teamId(1L)
                 .build();
     }
 
     @Test
-    public void PlayerRest_GetPlayersByLastname_ReturnsResponse() throws Exception {
+    public void PlayerRest_GetPlayersByLastname_ReturnsOk() throws Exception {
         String searchParameter = "Papa";
         List<Player> players = new ArrayList<>();
         players.add(player);
-        List<PlayerReadOnlyDTO> playerReadOnlyDTOS = new ArrayList<>();
-        playerReadOnlyDTOS.add(playerReadOnlyDTO);
 
         when(playerService.getPlayerByLastname(searchParameter)).thenReturn(players);
 
         ResultActions response = mockMvc.perform(get("/api/players?lastname=Papa")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(playerReadOnlyDTOS)));
+                .contentType(MediaType.APPLICATION_JSON));
 
         response.andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.size()", CoreMatchers.is(players.size())));
@@ -125,14 +144,13 @@ public class PlayerRestTests {
     }
 
     @Test
-    public void PlayerRest_GetPlayerById_ReturnsResponse() throws Exception {
+    public void PlayerRest_GetPlayerById_ReturnsOk() throws Exception {
         Long playerId = 1L;
 
         when(playerService.getPlayerById(playerId)).thenReturn(player);
 
         ResultActions response = mockMvc.perform(get("/api/players/1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(playerReadOnlyDTO)));
+                .contentType(MediaType.APPLICATION_JSON));
 
         response.andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.firstname", CoreMatchers.is(player.getFirstname())))
@@ -146,6 +164,119 @@ public class PlayerRestTests {
         when(playerService.getPlayerById(playerId)).thenThrow(EntityNotFoundException.class);
 
         ResultActions response = mockMvc.perform(get("/api/players/2")
+                .contentType(MediaType.APPLICATION_JSON));
+
+        response.andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
+    public void PlayerRest_AddPlayer_ReturnsCreated() throws Exception {
+        when(playerService.insertPlayer(Mockito.any(PlayerInsertDTO.class))).thenReturn(player);
+
+        ResultActions response = mockMvc.perform(post("/api/players")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(playerInsertDTO)));
+
+        response.andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.header().string("Location", "http://localhost/api/players/1"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id", CoreMatchers.is(1)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.lastname", CoreMatchers.is(playerInsertDTO.getLastname())));
+    }
+
+    @Test
+    public void PlayerRest_AddPlayer_TeamNotFound_ReturnsBadRequest() throws Exception {
+        when(playerService.insertPlayer(Mockito.any(PlayerInsertDTO.class))).thenThrow(EntityNotFoundException.class);
+
+        ResultActions response = mockMvc.perform(post("/api/players")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(playerInsertDTO)));
+
+        response.andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
+    public void PlayerRest_AddPlayer_ReturnsServiceUnavailable() throws Exception {
+        when(playerService.insertPlayer(Mockito.any(PlayerInsertDTO.class))).thenThrow(Exception.class);
+
+        ResultActions response = mockMvc.perform(post("/api/players")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(playerInsertDTO)));
+
+        response.andExpect(MockMvcResultMatchers.status().isServiceUnavailable());
+    }
+
+    @Test
+    public void PlayerRest_AddPlayer_ValidationError_ReturnsBadRequest() throws Exception {
+        ResultActions response = mockMvc.perform(post("/api/players")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(playerInsertDTOInvalid)));
+
+        response.andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
+    public void PlayerRest_UpdatePlayer_ReturnsOk() throws Exception {
+        when(playerService.updatePlayer(Mockito.any(PlayerUpdateDTO.class))).thenReturn(updatedPlayer);
+
+        ResultActions response = mockMvc.perform(put("/api/players/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(playerUpdateDTO)));
+
+        response.andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id", CoreMatchers.is((int) (long) playerUpdateDTO.getId())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.lastname", CoreMatchers.is(playerUpdateDTO.getLastname())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.monetaryValue", CoreMatchers.is(playerUpdateDTO.getMonetaryValue())));
+    }
+
+    @Test
+    public void PlayerRest_UpdatePlayer_ReturnsUnauthorized() throws Exception {
+        ResultActions response = mockMvc.perform(put("/api/players/2")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(playerUpdateDTO)));
+
+        response.andExpect(MockMvcResultMatchers.status().isUnauthorized());
+    }
+
+    @Test
+    public void PlayerRest_UpdatePlayer_PlayerNotFound_ReturnsBadRequest() throws Exception {
+        when(playerService.updatePlayer(Mockito.any(PlayerUpdateDTO.class))).thenThrow(EntityNotFoundException.class);
+
+        ResultActions response = mockMvc.perform(put("/api/players/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(playerUpdateDTO)));
+
+        response.andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
+    public void PlayerRest_UpdatePlayer_ValidationError_ReturnsBadRequest() throws Exception {
+        ResultActions response = mockMvc.perform(put("/api/players/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(playerUpdateDTOInvalid)));
+
+        response.andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
+    public void PlayerRest_DeletePlayer_ReturnsOk() throws Exception {
+        Long playerId = 1L;
+
+        when(playerService.deletePlayer(playerId)).thenReturn(player);
+
+        ResultActions response = mockMvc.perform(delete("/api/players/1")
+                .contentType(MediaType.APPLICATION_JSON));
+
+        response.andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id", CoreMatchers.is((int) (long) playerId)));
+    }
+
+    @Test
+    public void PlayerRest_DeletePlayer_ReturnsBadRequest() throws Exception {
+        Long playerId = 2L;
+
+        when(playerService.deletePlayer(playerId)).thenThrow(EntityNotFoundException.class);
+
+        ResultActions response = mockMvc.perform(delete("/api/players/2")
                 .contentType(MediaType.APPLICATION_JSON));
 
         response.andExpect(MockMvcResultMatchers.status().isBadRequest());
