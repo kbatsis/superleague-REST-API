@@ -21,7 +21,6 @@ public class PlayerRepositoryTests {
     private PlayerRepository playerRepository;
 
     private Player player1;
-
     private Player player2;
 
     @BeforeEach

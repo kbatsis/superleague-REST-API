@@ -34,15 +34,10 @@ public class PlayerServiceTests {
     private PlayerServiceImpl playerService;
 
     private Player player;
-
     private PlayerInsertDTO playerInsertDTO;
-
     private PlayerUpdateDTO playerUpdateDTO;
-
     private Team team;
-
     private Player playerNull;
-
     private Player updatedPlayer;
 
     @BeforeEach
