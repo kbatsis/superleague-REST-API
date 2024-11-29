@@ -92,7 +92,7 @@ public class TeamServiceTests {
 
         teamUpdateDTO = TeamUpdateDTO.builder()
                 .id(1L)
-                .teamName("Aris")
+                .teamName("Arhs")
                 .foundationYear(1914)
                 .cityName("Thessaloniki")
                 .stadiumName("Kleanthis Vikelidis")
