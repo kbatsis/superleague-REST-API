@@ -60,6 +60,7 @@ public class Match extends AbstractEntity {
         team.getMatchesGuest().remove(this);
     }
 
+    @Builder
     public Match(Long id, Date matchDate, Integer goalsHost, Integer goalsGuest) {
         setId(id);
         this.matchDate = matchDate;

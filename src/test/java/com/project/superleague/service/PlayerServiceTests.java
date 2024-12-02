@@ -34,14 +34,30 @@ public class PlayerServiceTests {
     private PlayerServiceImpl playerService;
 
     private Player player;
+    private Player playerWithoutTeam;
     private PlayerInsertDTO playerInsertDTO;
     private PlayerUpdateDTO playerUpdateDTO;
+    private PlayerInsertDTO playerInsertDTOWithoutTeam;
+    private PlayerUpdateDTO playerUpdateDTOWithoutTeam;
     private Team team;
     private Player playerNull;
     private Player updatedPlayer;
+    private Player updatedPlayerWithoutTeam;
 
     @BeforeEach
     public void init() {
+        team = Team.builder()
+                .id(1L)
+                .teamName("Aris")
+                .foundationYear(1914)
+                .cityName("Thessaloniki")
+                .stadiumName("Kleanthis Vikelidis")
+                .coachFirstname("Akis")
+                .coachLastname("Mantzios")
+                .presidentFirstname("Eirini")
+                .presidentLastname("Karypidou")
+                .build();
+
         player = Player.builder()
                 .id(1L)
                 .firstname("Nikos")
@@ -52,7 +68,31 @@ public class PlayerServiceTests {
                 .playerRole("Goalkeeper")
                 .build();
 
+        player.addTeam(team);
+
         updatedPlayer = Player.builder()
+                .id(1L)
+                .firstname("Nikos")
+                .lastname("Papadimitris")
+                .dateOfBirth(new GregorianCalendar(2000, Calendar.FEBRUARY, 23).getTime())
+                .nationality("Greek")
+                .monetaryValue(60000)
+                .playerRole("Goalkeeper")
+                .build();
+
+        updatedPlayer.addTeam(team);
+
+        playerWithoutTeam = Player.builder()
+                .id(2L)
+                .firstname("Nikos")
+                .lastname("Papadimitriou")
+                .dateOfBirth(new GregorianCalendar(2000, Calendar.FEBRUARY, 23).getTime())
+                .nationality("Greek")
+                .monetaryValue(50000)
+                .playerRole("Goalkeeper")
+                .build();
+
+        updatedPlayerWithoutTeam = Player.builder()
                 .id(1L)
                 .firstname("Nikos")
                 .lastname("Papadimitris")
@@ -83,16 +123,25 @@ public class PlayerServiceTests {
                 .teamId(1L)
                 .build();
 
-        team = Team.builder()
+        playerInsertDTOWithoutTeam = PlayerInsertDTO.builder()
+                .firstname("Nikos")
+                .lastname("Papadimitriou")
+                .dateOfBirth(new GregorianCalendar(2000, Calendar.FEBRUARY, 23).getTime())
+                .nationality("Greek")
+                .monetaryValue(50000)
+                .playerRole("Goalkeeper")
+                .teamId(null)
+                .build();
+
+        playerUpdateDTOWithoutTeam = PlayerUpdateDTO.builder()
                 .id(1L)
-                .teamName("Aris")
-                .foundationYear(1914)
-                .cityName("Thessaloniki")
-                .stadiumName("Kleanthis Vikelidis")
-                .coachFirstname("Akis")
-                .coachLastname("Mantzios")
-                .presidentFirstname("Eirini")
-                .presidentLastname("Karypidou")
+                .firstname("Nikos")
+                .lastname("Papadimitris")
+                .dateOfBirth(new GregorianCalendar(2000, Calendar.FEBRUARY, 23).getTime())
+                .nationality("Greek")
+                .monetaryValue(60000)
+                .playerRole("Goalkeeper")
+                .teamId(null)
                 .build();
 
         playerNull = Player.builder().build();
@@ -104,6 +153,15 @@ public class PlayerServiceTests {
         when(teamRepository.findById(playerInsertDTO.getTeamId())).thenReturn(Optional.ofNullable(team));
 
         Player savedPlayer = playerService.insertPlayer(playerInsertDTO);
+
+        Assertions.assertThat(savedPlayer.getId()).isNotNull();
+    }
+
+    @Test
+    public void PlayerService_InsertPlayerWithoutTeam_ReturnsPlayerDTOIdNotNull() throws Exception {
+        when(playerRepository.save(Mockito.any(Player.class))).thenReturn(playerWithoutTeam);
+
+        Player savedPlayer = playerService.insertPlayer(playerInsertDTOWithoutTeam);
 
         Assertions.assertThat(savedPlayer.getId()).isNotNull();
     }
@@ -126,10 +184,21 @@ public class PlayerServiceTests {
     @Test
     public void PlayerService_UpdatePlayer_ReturnsUpdatedPlayerDTO() throws EntityNotFoundException {
         when(playerRepository.findById(playerUpdateDTO.getId())).thenReturn(Optional.ofNullable(player));
-        when(teamRepository.findById(playerInsertDTO.getTeamId())).thenReturn(Optional.ofNullable(team));
+        when(teamRepository.findById(playerUpdateDTO.getTeamId())).thenReturn(Optional.ofNullable(team));
         when(playerRepository.save(Mockito.any(Player.class))).thenReturn(updatedPlayer);
 
         Player updateReturn = playerService.updatePlayer(playerUpdateDTO);
+
+        Assertions.assertThat(updateReturn.getLastname()).isEqualTo("Papadimitris");
+        Assertions.assertThat(updateReturn.getMonetaryValue()).isEqualTo(60000);
+    }
+
+    @Test
+    public void PlayerService_UpdatePlayerWithoutTeam_ReturnsUpdatedPlayerDTO() throws EntityNotFoundException {
+        when(playerRepository.findById(playerUpdateDTOWithoutTeam.getId())).thenReturn(Optional.ofNullable(player));
+        when(playerRepository.save(Mockito.any(Player.class))).thenReturn(updatedPlayerWithoutTeam);
+
+        Player updateReturn = playerService.updatePlayer(playerUpdateDTOWithoutTeam);
 
         Assertions.assertThat(updateReturn.getLastname()).isEqualTo("Papadimitris");
         Assertions.assertThat(updateReturn.getMonetaryValue()).isEqualTo(60000);
@@ -145,7 +214,7 @@ public class PlayerServiceTests {
     @Test
     public void PlayerService_UpdatePlayer_ThrowsEntityNotFoundExceptionForTeam() throws EntityNotFoundException {
         when(playerRepository.findById(playerUpdateDTO.getId())).thenReturn(Optional.ofNullable(player));
-        when(teamRepository.findById(playerInsertDTO.getTeamId())).thenReturn(Optional.empty());
+        when(teamRepository.findById(playerUpdateDTO.getTeamId())).thenReturn(Optional.empty());
 
         Assertions.assertThatThrownBy(() -> playerService.updatePlayer(playerUpdateDTO)).isInstanceOf(EntityNotFoundException.class);
     }

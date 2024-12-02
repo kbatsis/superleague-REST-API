@@ -42,7 +42,6 @@ public class PlayerRepositoryTests {
                 .monetaryValue(40000)
                 .playerRole("Centre-back")
                 .build();
-
     }
 
     @Test
