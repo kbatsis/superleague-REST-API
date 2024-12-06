@@ -61,14 +61,9 @@ public class TeamServiceImpl implements ITeamService {
     @Override
     public Team deleteTeam(Long id) throws EntityNotFoundException {
         Team team = null;
-        Set<Player> players;
 
         try {
             team = teamRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(Team.class, id));
-            players = team.getAllPlayers();
-            for (Player player : players) {
-                player.setTeam(null);
-            }
             teamRepository.deleteById(id);
             log.info("Deletion successful.");
         } catch (EntityNotFoundException e) {

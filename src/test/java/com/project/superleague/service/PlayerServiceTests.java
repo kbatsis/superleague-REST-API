@@ -6,7 +6,6 @@ import com.project.superleague.model.Player;
 import com.project.superleague.model.Team;
 import com.project.superleague.repository.PlayerRepository;
 import com.project.superleague.repository.TeamRepository;
-import com.project.superleague.service.PlayerServiceImpl;
 import com.project.superleague.service.exception.EntityNotFoundException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +16,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.when;
@@ -34,15 +36,11 @@ public class PlayerServiceTests {
     private PlayerServiceImpl playerService;
 
     private Player player;
-    private Player playerWithoutTeam;
     private PlayerInsertDTO playerInsertDTO;
     private PlayerUpdateDTO playerUpdateDTO;
-    private PlayerInsertDTO playerInsertDTOWithoutTeam;
-    private PlayerUpdateDTO playerUpdateDTOWithoutTeam;
     private Team team;
     private Player playerNull;
     private Player updatedPlayer;
-    private Player updatedPlayerWithoutTeam;
 
     @BeforeEach
     public void init() {
@@ -62,7 +60,7 @@ public class PlayerServiceTests {
                 .id(1L)
                 .firstname("Nikos")
                 .lastname("Papadimitriou")
-                .dateOfBirth(new GregorianCalendar(2000, Calendar.FEBRUARY, 23).getTime())
+                .dateOfBirth(LocalDate.parse("2000-02-23"))
                 .nationality("Greek")
                 .monetaryValue(50000)
                 .playerRole("Goalkeeper")
@@ -74,7 +72,7 @@ public class PlayerServiceTests {
                 .id(1L)
                 .firstname("Nikos")
                 .lastname("Papadimitris")
-                .dateOfBirth(new GregorianCalendar(2000, Calendar.FEBRUARY, 23).getTime())
+                .dateOfBirth(LocalDate.parse("2000-02-23"))
                 .nationality("Greek")
                 .monetaryValue(60000)
                 .playerRole("Goalkeeper")
@@ -82,30 +80,10 @@ public class PlayerServiceTests {
 
         updatedPlayer.addTeam(team);
 
-        playerWithoutTeam = Player.builder()
-                .id(2L)
-                .firstname("Nikos")
-                .lastname("Papadimitriou")
-                .dateOfBirth(new GregorianCalendar(2000, Calendar.FEBRUARY, 23).getTime())
-                .nationality("Greek")
-                .monetaryValue(50000)
-                .playerRole("Goalkeeper")
-                .build();
-
-        updatedPlayerWithoutTeam = Player.builder()
-                .id(1L)
-                .firstname("Nikos")
-                .lastname("Papadimitris")
-                .dateOfBirth(new GregorianCalendar(2000, Calendar.FEBRUARY, 23).getTime())
-                .nationality("Greek")
-                .monetaryValue(60000)
-                .playerRole("Goalkeeper")
-                .build();
-
         playerInsertDTO = PlayerInsertDTO.builder()
                 .firstname("Nikos")
                 .lastname("Papadimitriou")
-                .dateOfBirth(new GregorianCalendar(2000, Calendar.FEBRUARY, 23).getTime())
+                .dateOfBirth(LocalDate.parse("2000-02-23"))
                 .nationality("Greek")
                 .monetaryValue(50000)
                 .playerRole("Goalkeeper")
@@ -116,32 +94,11 @@ public class PlayerServiceTests {
                 .id(1L)
                 .firstname("Nikos")
                 .lastname("Papadimitris")
-                .dateOfBirth(new GregorianCalendar(2000, Calendar.FEBRUARY, 23).getTime())
+                .dateOfBirth(LocalDate.parse("2000-02-23"))
                 .nationality("Greek")
                 .monetaryValue(60000)
                 .playerRole("Goalkeeper")
                 .teamId(1L)
-                .build();
-
-        playerInsertDTOWithoutTeam = PlayerInsertDTO.builder()
-                .firstname("Nikos")
-                .lastname("Papadimitriou")
-                .dateOfBirth(new GregorianCalendar(2000, Calendar.FEBRUARY, 23).getTime())
-                .nationality("Greek")
-                .monetaryValue(50000)
-                .playerRole("Goalkeeper")
-                .teamId(null)
-                .build();
-
-        playerUpdateDTOWithoutTeam = PlayerUpdateDTO.builder()
-                .id(1L)
-                .firstname("Nikos")
-                .lastname("Papadimitris")
-                .dateOfBirth(new GregorianCalendar(2000, Calendar.FEBRUARY, 23).getTime())
-                .nationality("Greek")
-                .monetaryValue(60000)
-                .playerRole("Goalkeeper")
-                .teamId(null)
                 .build();
 
         playerNull = Player.builder().build();
@@ -153,15 +110,6 @@ public class PlayerServiceTests {
         when(teamRepository.findById(playerInsertDTO.getTeamId())).thenReturn(Optional.ofNullable(team));
 
         Player savedPlayer = playerService.insertPlayer(playerInsertDTO);
-
-        Assertions.assertThat(savedPlayer.getId()).isNotNull();
-    }
-
-    @Test
-    public void PlayerService_InsertPlayerWithoutTeam_ReturnsPlayerDTOIdNotNull() throws Exception {
-        when(playerRepository.save(Mockito.any(Player.class))).thenReturn(playerWithoutTeam);
-
-        Player savedPlayer = playerService.insertPlayer(playerInsertDTOWithoutTeam);
 
         Assertions.assertThat(savedPlayer.getId()).isNotNull();
     }
@@ -188,17 +136,6 @@ public class PlayerServiceTests {
         when(playerRepository.save(Mockito.any(Player.class))).thenReturn(updatedPlayer);
 
         Player updateReturn = playerService.updatePlayer(playerUpdateDTO);
-
-        Assertions.assertThat(updateReturn.getLastname()).isEqualTo("Papadimitris");
-        Assertions.assertThat(updateReturn.getMonetaryValue()).isEqualTo(60000);
-    }
-
-    @Test
-    public void PlayerService_UpdatePlayerWithoutTeam_ReturnsUpdatedPlayerDTO() throws EntityNotFoundException {
-        when(playerRepository.findById(playerUpdateDTOWithoutTeam.getId())).thenReturn(Optional.ofNullable(player));
-        when(playerRepository.save(Mockito.any(Player.class))).thenReturn(updatedPlayerWithoutTeam);
-
-        Player updateReturn = playerService.updatePlayer(playerUpdateDTOWithoutTeam);
 
         Assertions.assertThat(updateReturn.getLastname()).isEqualTo("Papadimitris");
         Assertions.assertThat(updateReturn.getMonetaryValue()).isEqualTo(60000);

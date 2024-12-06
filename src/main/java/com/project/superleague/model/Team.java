@@ -53,7 +53,7 @@ public class Team extends AbstractEntity {
         return Collections.unmodifiableSet(matchesGuest);
     }
 
-    @OneToMany(mappedBy = "team")
+    @OneToMany(mappedBy = "team", cascade = CascadeType.REMOVE)
     @Getter(AccessLevel.PROTECTED)
     private Set<Player> players = new HashSet<>();
 

@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,7 +19,7 @@ public class PlayerUpdateDTO extends BaseDTO {
     @Size(min = 2, max = 30)
     private String lastname;
 
-    private Date dateOfBirth;
+    private LocalDate dateOfBirth;
 
     @Size(min = 2, max = 30)
     private String nationality;
@@ -29,10 +29,11 @@ public class PlayerUpdateDTO extends BaseDTO {
     @Size(max = 20)
     private String playerRole;
 
+    @NotNull
     private Long teamId;
 
     @Builder
-    public PlayerUpdateDTO(Long id, String firstname, String lastname, Date dateOfBirth, String nationality, Integer monetaryValue, String playerRole, Long teamId) {
+    public PlayerUpdateDTO(Long id, String firstname, String lastname, LocalDate dateOfBirth, String nationality, Integer monetaryValue, String playerRole, Long teamId) {
         setId(id);
         this.firstname = firstname;
         this.lastname = lastname;

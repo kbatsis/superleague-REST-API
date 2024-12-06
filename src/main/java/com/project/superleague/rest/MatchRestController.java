@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -28,7 +28,7 @@ public class MatchRestController {
     private final IMatchService matchService;
 
     @GetMapping("/matches")
-    public ResponseEntity<Object> getMatchesByDate(@RequestParam("date") @DateTimeFormat(pattern = "ddMMyyyy") Date date) {
+    public ResponseEntity<Object> getMatchesByDate(@RequestParam("date") @DateTimeFormat(pattern = "ddMMyyyy") LocalDate date) {
         List<Match> matches;
 
         try {

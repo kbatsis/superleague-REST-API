@@ -4,8 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
-import java.security.SecureRandom;
-import java.util.Date;
+import java.time.LocalDate;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,7 +20,7 @@ public class PlayerInsertDTO {
     @Size(min = 2, max = 30)
     private String lastname;
 
-    private Date dateOfBirth;
+    private LocalDate dateOfBirth;
 
     @Size(min = 2, max = 30)
     private String nationality;
@@ -31,5 +30,6 @@ public class PlayerInsertDTO {
     @Size(max = 20)
     private String playerRole;
 
+    @NotNull
     private Long teamId;
 }

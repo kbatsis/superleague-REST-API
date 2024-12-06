@@ -3,7 +3,8 @@ package com.project.superleague.dto;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDate;
+
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -11,7 +12,7 @@ import java.util.Date;
 @Setter
 public class MatchUpdateDTO extends BaseDTO {
     @NotNull
-    private Date matchDate;
+    private LocalDate matchDate;
 
     @NotNull
     private Integer goalsHost;
@@ -26,7 +27,7 @@ public class MatchUpdateDTO extends BaseDTO {
     private Long guestTeamId;
 
     @Builder
-    public MatchUpdateDTO(Long id, Date matchDate, Integer goalsHost, Integer goalsGuest, Long hostTeamId, Long guestTeamId) {
+    public MatchUpdateDTO(Long id, LocalDate matchDate, Integer goalsHost, Integer goalsGuest, Long hostTeamId, Long guestTeamId) {
         setId(id);
         this.matchDate = matchDate;
         this.goalsHost = goalsHost;

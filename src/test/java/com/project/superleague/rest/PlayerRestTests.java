@@ -6,6 +6,7 @@ import com.project.superleague.dto.PlayerInsertDTO;
 import com.project.superleague.dto.PlayerReadOnlyDTO;
 import com.project.superleague.dto.PlayerUpdateDTO;
 import com.project.superleague.model.Player;
+import com.project.superleague.model.Team;
 import com.project.superleague.service.IPlayerService;
 import com.project.superleague.service.exception.EntityNotFoundException;
 import org.hamcrest.CoreMatchers;
@@ -23,9 +24,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import static org.mockito.Mockito.doNothing;
@@ -48,6 +48,7 @@ public class PlayerRestTests {
 
     private Player player;
     private Player updatedPlayer;
+    private Team team;
     private PlayerInsertDTO playerInsertDTO;
     private PlayerInsertDTO playerInsertDTOInvalid;
     private PlayerUpdateDTO playerUpdateDTO;
@@ -55,30 +56,46 @@ public class PlayerRestTests {
 
     @BeforeEach
     public void init() {
+        team = Team.builder()
+                .id(1L)
+                .teamName("Aris")
+                .foundationYear(1914)
+                .cityName("Thessaloniki")
+                .stadiumName("Kleanthis Vikelidis")
+                .coachFirstname("Akis")
+                .coachLastname("Mantzios")
+                .presidentFirstname("Eirini")
+                .presidentLastname("Karypidou")
+                .build();
+
         player = Player.builder()
                 .id(1L)
                 .firstname("Nikos")
                 .lastname("Papadimitriou")
-                .dateOfBirth(new GregorianCalendar(2000, Calendar.FEBRUARY, 23).getTime())
+                .dateOfBirth(LocalDate.parse("2000-02-23"))
                 .nationality("Greek")
                 .monetaryValue(50000)
                 .playerRole("Goalkeeper")
                 .build();
 
+        player.addTeam(team);
+
         updatedPlayer = Player.builder()
                 .id(1L)
                 .firstname("Nikos")
                 .lastname("Papadimitris")
-                .dateOfBirth(new GregorianCalendar(2000, Calendar.FEBRUARY, 23).getTime())
+                .dateOfBirth(LocalDate.parse("2000-02-23"))
                 .nationality("Greek")
                 .monetaryValue(60000)
                 .playerRole("Goalkeeper")
                 .build();
 
+        updatedPlayer.addTeam(team);
+
         playerInsertDTO = PlayerInsertDTO.builder()
                 .firstname("Nikos")
                 .lastname("Papadimitriou")
-                .dateOfBirth(new GregorianCalendar(2000, Calendar.FEBRUARY, 23).getTime())
+                .dateOfBirth(LocalDate.parse("2000-02-23"))
                 .nationality("Greek")
                 .monetaryValue(50000)
                 .playerRole("Goalkeeper")
@@ -88,7 +105,7 @@ public class PlayerRestTests {
         playerInsertDTOInvalid = PlayerInsertDTO.builder()
                 .firstname("N")
                 .lastname("Papadimitriou")
-                .dateOfBirth(new GregorianCalendar(2000, Calendar.FEBRUARY, 23).getTime())
+                .dateOfBirth(LocalDate.parse("2000-02-23"))
                 .nationality("Greek")
                 .monetaryValue(50000)
                 .playerRole("Goalkeeper")
@@ -98,7 +115,7 @@ public class PlayerRestTests {
                 .id(1L)
                 .firstname("Nikos")
                 .lastname("Papadimitris")
-                .dateOfBirth(new GregorianCalendar(2000, Calendar.FEBRUARY, 23).getTime())
+                .dateOfBirth(LocalDate.parse("2000-02-23"))
                 .nationality("Greek")
                 .monetaryValue(60000)
                 .playerRole("Goalkeeper")
@@ -109,7 +126,7 @@ public class PlayerRestTests {
                 .id(1L)
                 .firstname("N")
                 .lastname("Papadimitriou")
-                .dateOfBirth(new GregorianCalendar(2000, Calendar.FEBRUARY, 23).getTime())
+                .dateOfBirth(LocalDate.parse("2000-02-23"))
                 .nationality("Greek")
                 .monetaryValue(50000)
                 .playerRole("Goalkeeper")

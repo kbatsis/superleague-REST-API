@@ -3,7 +3,7 @@ package com.project.superleague.dto;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -12,7 +12,7 @@ import java.util.Date;
 @Setter
 public class MatchInsertDTO {
     @NotNull
-    private Date matchDate;
+    private LocalDate matchDate;
 
     @NotNull
     private Integer goalsHost;

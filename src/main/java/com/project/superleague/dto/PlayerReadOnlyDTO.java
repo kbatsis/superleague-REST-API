@@ -5,7 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDate;
+
 
 @NoArgsConstructor
 @Getter
@@ -13,14 +14,14 @@ import java.util.Date;
 public class PlayerReadOnlyDTO extends BaseDTO {
     private String firstname;
     private String lastname;
-    private Date dateOfBirth;
+    private LocalDate dateOfBirth;
     private String nationality;
     private Integer monetaryValue;
     private String playerRole;
     private Long teamId;
 
     @Builder
-    public PlayerReadOnlyDTO(Long id, Date dateOfBirth, String firstname, String lastname, Integer monetaryValue, String nationality, String playerRole, Long teamId) {
+    public PlayerReadOnlyDTO(Long id, LocalDate dateOfBirth, String firstname, String lastname, Integer monetaryValue, String nationality, String playerRole, Long teamId) {
         setId(id);
         this.dateOfBirth = dateOfBirth;
         this.firstname = firstname;

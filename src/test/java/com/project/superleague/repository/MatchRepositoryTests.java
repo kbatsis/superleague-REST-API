@@ -11,8 +11,7 @@ import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.time.LocalDate;
 import java.util.List;
 
 @DataJpaTest
@@ -54,7 +53,7 @@ public class MatchRepositoryTests {
                 .build();
 
         match1 = Match.builder()
-                .matchDate(new GregorianCalendar(2024, Calendar.OCTOBER, 4).getTime())
+                .matchDate(LocalDate.parse("2024-10-04"))
                 .goalsHost(1)
                 .goalsGuest(2)
                 .build();
@@ -63,7 +62,7 @@ public class MatchRepositoryTests {
         match1.addGuestTeam(team2);
 
         match2 = Match.builder()
-                .matchDate(new GregorianCalendar(2024, Calendar.OCTOBER, 27).getTime())
+                .matchDate(LocalDate.parse("2024-10-27"))
                 .goalsHost(0)
                 .goalsGuest(1)
                 .build();
@@ -79,7 +78,7 @@ public class MatchRepositoryTests {
         matchRepository.save(match1);
         matchRepository.save(match2);
 
-        List<Match> matches  = matchRepository.findByMatchDate(new GregorianCalendar(2024, Calendar.OCTOBER, 27).getTime());
+        List<Match> matches  = matchRepository.findByMatchDate(LocalDate.parse("2024-10-27"));
 
         Assertions.assertThat(matches.size()).isEqualTo(1);
     }
@@ -91,19 +90,7 @@ public class MatchRepositoryTests {
         matchRepository.save(match1);
         matchRepository.save(match2);
 
-        List<Match> matches  = matchRepository.findByMatchDate(new GregorianCalendar(2024, Calendar.OCTOBER, 15).getTime());
-
-        Assertions.assertThat(matches).isEmpty();
-    }
-
-    @Test
-    public void MatchRepository_FindByMatchDate_NullDate_ReturnsMatchesEmpty() {
-        teamRepository.save(team1);
-        teamRepository.save(team2);
-        matchRepository.save(match1);
-        matchRepository.save(match2);
-
-        List<Match> matches  = matchRepository.findByMatchDate(null);
+        List<Match> matches  = matchRepository.findByMatchDate(LocalDate.parse("2024-10-15"));
 
         Assertions.assertThat(matches).isEmpty();
     }

@@ -4,8 +4,8 @@ package com.project.superleague.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.Collections;
-import java.util.Date;
 import java.util.Set;
 
 @Entity
@@ -21,8 +21,7 @@ public class Player extends AbstractEntity {
     private String lastname;
 
     @Column(name = "DateOfBirth")
-    @Temporal(TemporalType.DATE)
-    private Date dateOfBirth;
+    private LocalDate dateOfBirth;
 
     @Column(name = "Nationality", length = 30)
     private String nationality;
@@ -34,14 +33,12 @@ public class Player extends AbstractEntity {
     private String playerRole;
 
     @ManyToOne
-    @JoinColumn(name = "TeamId", referencedColumnName = "id")
+    @JoinColumn(name = "TeamId", referencedColumnName = "id", nullable = false)
     private Team team;
 
     public void addTeam(Team team) {
         setTeam(team);
-        if (team != null) {
-            team.getPlayers().add(this);
-        }
+        team.getPlayers().add(this);
     }
 
     public void deleteTeam(Team team) {
@@ -58,7 +55,7 @@ public class Player extends AbstractEntity {
     }
 
     @Builder
-    public Player(Long id, String firstname, String lastname, Date dateOfBirth, String nationality, Integer monetaryValue, String playerRole) {
+    public Player(Long id, String firstname, String lastname, LocalDate dateOfBirth, String nationality, Integer monetaryValue, String playerRole) {
         setId(id);
         this.firstname = firstname;
         this.lastname = lastname;

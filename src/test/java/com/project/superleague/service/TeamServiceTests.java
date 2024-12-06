@@ -18,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -59,7 +60,7 @@ public class TeamServiceTests {
                 .id(1L)
                 .firstname("Nikos")
                 .lastname("Papadimitriou")
-                .dateOfBirth(new GregorianCalendar(2000, Calendar.FEBRUARY, 23).getTime())
+                .dateOfBirth(LocalDate.parse("2000-02-23"))
                 .nationality("Greek")
                 .monetaryValue(50000)
                 .playerRole("Goalkeeper")
@@ -145,7 +146,6 @@ public class TeamServiceTests {
         when(teamRepository.findById(teamId)).thenReturn(Optional.ofNullable(team));
 
         assertAll(() -> teamService.deleteTeam(teamId));
-        Assertions.assertThat(player.getTeam()).isNull();
     }
 
     @Test

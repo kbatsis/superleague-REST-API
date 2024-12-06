@@ -17,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -69,7 +70,7 @@ public class MatchServiceTests {
 
         match = Match.builder()
                 .id(1L)
-                .matchDate(new GregorianCalendar(2024, Calendar.OCTOBER, 4).getTime())
+                .matchDate(LocalDate.parse("2024-10-04"))
                 .goalsHost(1)
                 .goalsGuest(2)
                 .build();
@@ -78,7 +79,7 @@ public class MatchServiceTests {
         match.addGuestTeam(team2);
 
         matchInsertDTO = MatchInsertDTO.builder()
-                .matchDate(new GregorianCalendar(2024, Calendar.OCTOBER, 4).getTime())
+                .matchDate(LocalDate.parse("2024-10-04"))
                 .goalsHost(1)
                 .goalsGuest(2)
                 .hostTeamId(1L)
@@ -87,7 +88,7 @@ public class MatchServiceTests {
 
         matchUpdateDTO = MatchUpdateDTO.builder()
                 .id(1L)
-                .matchDate(new GregorianCalendar(2024, Calendar.NOVEMBER, 4).getTime())
+                .matchDate(LocalDate.parse("2024-11-04"))
                 .goalsHost(1)
                 .goalsGuest(0)
                 .hostTeamId(1L)
@@ -98,7 +99,7 @@ public class MatchServiceTests {
 
         updatedMatch = Match.builder()
                 .id(1L)
-                .matchDate(new GregorianCalendar(2024, Calendar.NOVEMBER, 4).getTime())
+                .matchDate(LocalDate.parse("2024-11-04"))
                 .goalsHost(1)
                 .goalsGuest(0)
                 .build();
@@ -151,7 +152,7 @@ public class MatchServiceTests {
 
         Match updateReturn = matchService.updateMatch(matchUpdateDTO);
 
-        Assertions.assertThat(updateReturn.getMatchDate()).isEqualTo(new GregorianCalendar(2024, Calendar.NOVEMBER, 4).getTime());
+        Assertions.assertThat(updateReturn.getMatchDate()).isEqualTo(LocalDate.parse("2024-11-04"));
         Assertions.assertThat(updateReturn.getGoalsGuest()).isEqualTo(0);
     }
 
@@ -199,7 +200,7 @@ public class MatchServiceTests {
 
     @Test
     public void MatchService_GetMatchByDate_ReturnsMatches() throws EntityNotFoundException {
-        Date searchParameter = new GregorianCalendar(2024, Calendar.OCTOBER, 4).getTime();
+        LocalDate searchParameter = LocalDate.parse("2024-10-04");
         List<Match> matches = new ArrayList<>();
         matches.add(match);
 
@@ -212,7 +213,7 @@ public class MatchServiceTests {
 
     @Test
     public void MatchService_GetMatchByDate_ThrowsEntityNotFoundException() throws EntityNotFoundException {
-        Date searchParameter = new GregorianCalendar(2024, Calendar.OCTOBER, 4).getTime();
+        LocalDate searchParameter = LocalDate.parse("2024-10-04");
         List<Match> matches = new ArrayList<>();
 
         when(matchRepository.findByMatchDate(searchParameter)).thenReturn(matches);

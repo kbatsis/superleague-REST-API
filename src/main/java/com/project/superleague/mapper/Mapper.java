@@ -22,11 +22,7 @@ public class Mapper {
     }
 
     public static PlayerReadOnlyDTO mapPlayerToReadOnlyDTO(Player player) {
-        Long teamId = null;
-
-        if (player.getTeam() != null) {
-            teamId = player.getTeam().getId();
-        }
+        Long teamId = player.getTeam().getId();
 
         return new PlayerReadOnlyDTO(player.getId(), player.getDateOfBirth(), player.getFirstname(), player.getLastname(), player.getMonetaryValue(), player.getNationality(), player.getPlayerRole(), teamId);
     }

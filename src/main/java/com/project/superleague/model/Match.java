@@ -3,8 +3,8 @@ package com.project.superleague.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,8 +15,7 @@ import java.util.Set;
 @Setter
 public class Match extends AbstractEntity {
     @Column(name = "MatchDate", nullable = false)
-    @Temporal(TemporalType.DATE)
-    private Date matchDate;
+    private LocalDate matchDate;
 
     @Column(name = "GoalsHost", nullable = false)
     private Integer goalsHost;
@@ -61,7 +60,7 @@ public class Match extends AbstractEntity {
     }
 
     @Builder
-    public Match(Long id, Date matchDate, Integer goalsHost, Integer goalsGuest) {
+    public Match(Long id, LocalDate matchDate, Integer goalsHost, Integer goalsGuest) {
         setId(id);
         this.matchDate = matchDate;
         this.goalsHost = goalsHost;

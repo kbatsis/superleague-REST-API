@@ -30,9 +30,7 @@ public class PlayerServiceImpl implements IPlayerService {
         Team team = null;
 
         try {
-            if (dto.getTeamId() != null) {
-                team = teamRepository.findById(dto.getTeamId()).orElseThrow(() -> new EntityNotFoundException(Team.class, dto.getTeamId()));
-            }
+            team = teamRepository.findById(dto.getTeamId()).orElseThrow(() -> new EntityNotFoundException(Team.class, dto.getTeamId()));
             player = playerRepository.save(Mapper.mapInsertDTOToPlayer(dto, team));
             if (player.getId() == null) {
                 throw new Exception("Insert error.");
@@ -57,12 +55,8 @@ public class PlayerServiceImpl implements IPlayerService {
 
         try {
             player = playerRepository.findById(dto.getId()).orElseThrow(() -> new EntityNotFoundException(Player.class, dto.getId()));
-            if (player.getTeam() != null) {
-                player.deleteTeam(player.getTeam());
-            }
-            if (dto.getTeamId() != null) {
-                team = teamRepository.findById(dto.getTeamId()).orElseThrow(() -> new EntityNotFoundException(Team.class, dto.getTeamId()));
-            }
+            player.deleteTeam(player.getTeam());
+            team = teamRepository.findById(dto.getTeamId()).orElseThrow(() -> new EntityNotFoundException(Team.class, dto.getTeamId()));
             updatedPlayer = playerRepository.save(Mapper.mapUpdateDTOToPlayer(dto, team));
             log.info("Update successful.");
         } catch (EntityNotFoundException e) {

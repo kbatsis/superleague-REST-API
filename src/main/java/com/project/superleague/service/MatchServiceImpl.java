@@ -13,8 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -89,7 +89,7 @@ public class MatchServiceImpl implements IMatchService {
     }
 
     @Override
-    public List<Match> getMatchByDate(Date date) throws EntityNotFoundException {
+    public List<Match> getMatchByDate(LocalDate date) throws EntityNotFoundException {
         List<Match> matches = new ArrayList<>();
 
         try {
