@@ -255,7 +255,7 @@ public class PlayerRestTests {
     }
 
     @Test
-    public void PlayerRest_UpdatePlayer_PlayerNotFound_ReturnsBadRequest() throws Exception {
+    public void PlayerRest_UpdatePlayer_EntityNotFound_ReturnsBadRequest() throws Exception {
         when(playerService.updatePlayer(Mockito.any(PlayerUpdateDTO.class))).thenThrow(EntityNotFoundException.class);
 
         ResultActions response = mockMvc.perform(put("/api/players/1")
