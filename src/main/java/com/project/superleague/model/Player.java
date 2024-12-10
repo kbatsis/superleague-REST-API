@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -48,7 +49,7 @@ public class Player extends AbstractEntity {
 
     @OneToMany(mappedBy = "player", cascade = CascadeType.REMOVE)
     @Getter(AccessLevel.PROTECTED)
-    private Set<MatchPlayer> matchesPlayers;
+    private Set<MatchPlayer> matchesPlayers = new HashSet<>();
 
     public Set<MatchPlayer> getAllMatchesPlayers() {
         return Collections.unmodifiableSet(matchesPlayers);

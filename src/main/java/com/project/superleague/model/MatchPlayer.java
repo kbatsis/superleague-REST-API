@@ -1,10 +1,7 @@
 package com.project.superleague.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "MatchesPlayers", uniqueConstraints = { @UniqueConstraint(name = "UniqueMatchAndPlayerId", columnNames = {"MatchId", "PlayerId"})})
@@ -42,6 +39,7 @@ public class MatchPlayer extends AbstractEntity {
     @Column(name = "Cards")
     private Integer cards;
 
+    @Builder
     public MatchPlayer(Long id, Integer playTime, Integer goals, Integer assists, Integer cards) {
         setId(id);
         this.playTime = playTime;

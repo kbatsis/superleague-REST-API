@@ -10,5 +10,5 @@ import java.util.Optional;
 @Repository
 public interface MatchPlayerRepository extends JpaRepository<MatchPlayer, Long> {
     Optional<MatchPlayer> findByMatchIdAndPlayerId(Long matchId, Long playerId);
-    void deleteByMatchIdAndPlayerId(Long matchId, Long playerId) throws EntityNotFoundException;
+    Long deleteByMatchIdAndPlayerId(Long matchId, Long playerId);
 }
