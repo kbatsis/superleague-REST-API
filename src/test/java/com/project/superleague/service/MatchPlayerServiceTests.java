@@ -23,6 +23,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -217,5 +218,47 @@ public class MatchPlayerServiceTests {
         when(playerRepository.findById(matchPlayerUpdateDTO.getPlayerId())).thenReturn(Optional.empty());
 
         Assertions.assertThatThrownBy(() -> matchPlayerService.updateMatchPlayer(matchPlayerUpdateDTO)).isInstanceOf(EntityNotFoundException.class);
+    }
+
+    @Test
+    public void MatchPlayerService_DeleteMatchPlayer_ReturnsVoid() {
+        Long matchId = 1L;
+        Long playerId = 1L;
+
+        when(matchPlayerRepository.findByMatchIdAndPlayerId(matchId, playerId)).thenReturn(Optional.ofNullable(matchPlayer));
+
+        assertAll(() -> matchPlayerService.deleteMatchPlayer(matchId, playerId));
+    }
+
+    @Test
+    public void MatchPlayerService_DeleteMatchPlayer_ThrowsEntityNotFoundException() {
+        Long matchId = 1L;
+        Long playerId = 1L;
+
+        when(matchPlayerRepository.findByMatchIdAndPlayerId(matchId, playerId)).thenReturn(Optional.empty());
+
+        Assertions.assertThatThrownBy(() -> matchPlayerService.deleteMatchPlayer(matchId, playerId)).isInstanceOf(EntityNotFoundException.class);
+    }
+
+    @Test
+    public void MatchPlayerService_GetMatchPlayerByMatchIdAndPlayerId_ReturnsMatchPlayer() throws EntityNotFoundException {
+        Long matchId = 1L;
+        Long playerId = 1L;
+
+        when(matchPlayerRepository.findByMatchIdAndPlayerId(matchId, playerId)).thenReturn(Optional.ofNullable(matchPlayer));
+
+        MatchPlayer matchPlayerReturn = matchPlayerService.getMatchPlayerByMatchIdAndPlayerId(matchId, playerId);
+
+        Assertions.assertThat(matchPlayerReturn).isNotNull();
+    }
+
+    @Test
+    public void MatchPlayerService_GetMatchPlayerByMatchIdAndPlayerId_ThrowsEntityNotFoundException() throws EntityNotFoundException {
+        Long matchId = 1L;
+        Long playerId = 1L;
+
+        when(matchPlayerRepository.findByMatchIdAndPlayerId(matchId, playerId)).thenReturn(Optional.empty());
+
+        Assertions.assertThatThrownBy(() -> matchPlayerService.getMatchPlayerByMatchIdAndPlayerId(matchId, playerId)).isInstanceOf(EntityNotFoundException.class);
     }
 }
