@@ -1,0 +1,44 @@
+services:
+  mysql:
+    container_name: mysql
+    image: mysql
+    ports:
+      - "3306:3306"
+    env_file:
+      - ".env"
+    command: --init-file /data/application/init.sql
+    volumes:
+        - ./init.sql:/data/application/init.sql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_USER_PASSWD}
+      - MYSQL_USER=superleagueuser
+      - MYSQL_PASSWORD=${DB_USER_PASSWD}
+    networks:
+      - stack
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p ${DB_USER_PASSWD}"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  application:
+    container_name: application
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    env_file:
+      - ".env"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/superleaguedb?serverTimezone=UTC
+    networks:
+      - stack
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+networks:
+  stack:
+    name: stack
+    driver: bridge
