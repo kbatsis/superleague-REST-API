@@ -175,7 +175,7 @@ public class PlayerRestTests {
     }
 
     @Test
-    public void PlayerRest_GetPlayerById_ReturnsBadRequest() throws Exception {
+    public void PlayerRest_GetPlayerById_ReturnsNotFound() throws Exception {
         Long playerId = 2L;
 
         when(playerService.getPlayerById(playerId)).thenThrow(EntityNotFoundException.class);
@@ -183,7 +183,7 @@ public class PlayerRestTests {
         ResultActions response = mockMvc.perform(get("/api/players/2")
                 .contentType(MediaType.APPLICATION_JSON));
 
-        response.andExpect(MockMvcResultMatchers.status().isBadRequest());
+        response.andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test
@@ -201,14 +201,14 @@ public class PlayerRestTests {
     }
 
     @Test
-    public void PlayerRest_AddPlayer_TeamNotFound_ReturnsBadRequest() throws Exception {
+    public void PlayerRest_AddPlayer_TeamNotFound_ReturnsNotFound() throws Exception {
         when(playerService.insertPlayer(Mockito.any(PlayerInsertDTO.class))).thenThrow(EntityNotFoundException.class);
 
         ResultActions response = mockMvc.perform(post("/api/players")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(playerInsertDTO)));
 
-        response.andExpect(MockMvcResultMatchers.status().isBadRequest());
+        response.andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test
@@ -255,14 +255,14 @@ public class PlayerRestTests {
     }
 
     @Test
-    public void PlayerRest_UpdatePlayer_EntityNotFound_ReturnsBadRequest() throws Exception {
+    public void PlayerRest_UpdatePlayer_EntityNotFound_ReturnsNotFound() throws Exception {
         when(playerService.updatePlayer(Mockito.any(PlayerUpdateDTO.class))).thenThrow(EntityNotFoundException.class);
 
         ResultActions response = mockMvc.perform(put("/api/players/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(playerUpdateDTO)));
 
-        response.andExpect(MockMvcResultMatchers.status().isBadRequest());
+        response.andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test
@@ -288,7 +288,7 @@ public class PlayerRestTests {
     }
 
     @Test
-    public void PlayerRest_DeletePlayer_ReturnsBadRequest() throws Exception {
+    public void PlayerRest_DeletePlayer_ReturnsNotFound() throws Exception {
         Long playerId = 2L;
 
         when(playerService.deletePlayer(playerId)).thenThrow(EntityNotFoundException.class);
@@ -296,6 +296,6 @@ public class PlayerRestTests {
         ResultActions response = mockMvc.perform(delete("/api/players/2")
                 .contentType(MediaType.APPLICATION_JSON));
 
-        response.andExpect(MockMvcResultMatchers.status().isBadRequest());
+        response.andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 }

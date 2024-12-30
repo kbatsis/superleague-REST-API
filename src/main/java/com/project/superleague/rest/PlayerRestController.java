@@ -10,6 +10,11 @@ import com.project.superleague.model.Player;
 import com.project.superleague.model.Team;
 import com.project.superleague.service.IPlayerService;
 import com.project.superleague.service.exception.EntityNotFoundException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
@@ -32,6 +37,13 @@ import java.util.stream.Collectors;
 public class PlayerRestController {
     private final IPlayerService playerService;
 
+    @Operation(summary = "Get players by their lastname. Given lastname can be missing ending letters.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Players with the given lastname were found.",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = PlayerReadOnlyDTO.class))}),
+            @ApiResponse(responseCode = "400", description = "Invalid lastname given.",
+                    content = @Content)})
     @GetMapping("/players")
     public ResponseEntity<Object> getPlayersByLastname(@RequestParam("lastname") String lastname) {
         List<Player> players;
@@ -48,6 +60,13 @@ public class PlayerRestController {
         }
     }
 
+    @Operation(summary = "Get player by his id.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Player was found.",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = PlayerReadOnlyDTO.class))}),
+            @ApiResponse(responseCode = "404", description = "Player was not found.",
+                    content = @Content)})
     @GetMapping("/players/{id}")
     public ResponseEntity<Object> getPlayerById(@PathVariable("id") Long id) {
         Player player;
@@ -57,10 +76,21 @@ public class PlayerRestController {
             PlayerReadOnlyDTO dto = Mapper.mapPlayerToReadOnlyDTO(player);
             return new ResponseEntity<>(dto, HttpStatus.OK);
         } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
+    @Operation(summary = "Add a player.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Player added.",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = PlayerReadOnlyDTO.class))}),
+            @ApiResponse(responseCode = "400", description = "Invalid input provided.",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "Team not found.",
+                    content = @Content),
+            @ApiResponse(responseCode = "503", description = "Service unavailable",
+                    content = @Content)})
     @PostMapping("/players")
     public ResponseEntity<Object> addPlayer(@Valid @RequestBody PlayerInsertDTO dto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -77,12 +107,23 @@ public class PlayerRestController {
                     .toUri();
             return ResponseEntity.created(location).body(playerReadOnlyDTO);
         } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE);
         }
     }
 
+    @Operation(summary = "Update a player.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Player updated.",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = PlayerReadOnlyDTO.class))}),
+            @ApiResponse(responseCode = "400", description = "Invalid input provided.",
+                    content = @Content),
+            @ApiResponse(responseCode = "401", description = "Unauthorized user.",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "Player or team not found.",
+                    content = @Content)})
     @PutMapping("/players/{id}")
     public ResponseEntity<Object> updatePlayer(@PathVariable("id") Long id, @Valid @RequestBody PlayerUpdateDTO dto, BindingResult bindingResult) {
         if (!Objects.equals(id, dto.getId())) {
@@ -98,10 +139,17 @@ public class PlayerRestController {
             PlayerReadOnlyDTO playerReadOnlyDTO = Mapper.mapPlayerToReadOnlyDTO(player);
             return new ResponseEntity<>(playerReadOnlyDTO, HttpStatus.OK);
         } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
+    @Operation(summary = "Delete a player.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Player deleted.",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = PlayerReadOnlyDTO.class))}),
+            @ApiResponse(responseCode = "404", description = "Player not found.",
+                    content = @Content)})
     @DeleteMapping("/players/{id}")
     public ResponseEntity<Object> deletePlayer(@PathVariable("id") Long id) {
         try {
@@ -109,7 +157,7 @@ public class PlayerRestController {
             PlayerReadOnlyDTO playerReadOnlyDTO = Mapper.mapPlayerToReadOnlyDTO(player);
             return new ResponseEntity<>(playerReadOnlyDTO, HttpStatus.OK);
         } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 }
