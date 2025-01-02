@@ -7,6 +7,11 @@ import com.project.superleague.model.MatchPlayer;
 import com.project.superleague.service.IMatchPlayerService;
 import com.project.superleague.service.exception.EntityAlreadyExistsException;
 import com.project.superleague.service.exception.EntityNotFoundException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -26,6 +31,13 @@ import java.util.Objects;
 public class MatchPlayerRestController {
     private final IMatchPlayerService matchPlayerService;
 
+    @Operation(summary = "Get player statistics for a given match by match id and player id.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Requested player statistics were found.",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = MatchPlayerReadOnlyDTO.class))}),
+            @ApiResponse(responseCode = "404", description = "Requested player statistics were not found.",
+                    content = @Content)})
     @GetMapping("/matchesplayers/{matchId}/{playerId}")
     public ResponseEntity<Object> getMatchPlayerByMatchIdAndPlayerId(@PathVariable("matchId") Long matchId, @PathVariable("playerId") Long playerId) {
         MatchPlayer matchPlayer;
@@ -35,10 +47,21 @@ public class MatchPlayerRestController {
             MatchPlayerReadOnlyDTO dto = Mapper.mapMatchPlayerToReadOnlyDTO(matchPlayer);
             return new ResponseEntity<>(dto, HttpStatus.OK);
         } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
+    @Operation(summary = "Add player statistics for a given match.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Player statistics for the given match added.",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = MatchPlayerReadOnlyDTO.class))}),
+            @ApiResponse(responseCode = "400", description = "Invalid input provided or the requested player statistics already exist.",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "Player or match not found.",
+                    content = @Content),
+            @ApiResponse(responseCode = "503", description = "Service unavailable",
+                    content = @Content)})
     @PostMapping("/matchesplayers")
     public ResponseEntity<Object> addMatchPlayer(@Valid @RequestBody MatchPlayerInsertDTO dto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -57,12 +80,23 @@ public class MatchPlayerRestController {
         } catch (EntityAlreadyExistsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE);
         }
     }
 
+    @Operation(summary = "Update player statistics for a given match.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Player statistics for the given match updated.",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = MatchPlayerReadOnlyDTO.class))}),
+            @ApiResponse(responseCode = "400", description = "Invalid input provided.",
+                    content = @Content),
+            @ApiResponse(responseCode = "401", description = "Unauthorized user.",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "Player statistics for the given match were not found.",
+                    content = @Content)})
     @PutMapping("/matchesplayers/{matchId}/{playerId}")
     public ResponseEntity<Object> updateMatchPlayer(@PathVariable("matchId") Long matchId, @PathVariable("playerId") Long playerId, @Valid @RequestBody MatchPlayerUpdateDTO dto, BindingResult bindingResult) {
         if (!Objects.equals(matchId, dto.getMatchId()) || !Objects.equals(playerId, dto.getPlayerId())) {
@@ -78,10 +112,17 @@ public class MatchPlayerRestController {
             MatchPlayerReadOnlyDTO matchPlayerReadOnlyDTO = Mapper.mapMatchPlayerToReadOnlyDTO(matchPlayer);
             return new ResponseEntity<>(matchPlayerReadOnlyDTO, HttpStatus.OK);
         } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
+    @Operation(summary = "Delete player statistics for a given match.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Player statistics for the given match were deleted.",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = MatchPlayerReadOnlyDTO.class))}),
+            @ApiResponse(responseCode = "404", description = "Player statistics for the given match were not found.",
+                    content = @Content)})
     @DeleteMapping("/matchesplayers/{matchId}/{playerId}")
     public ResponseEntity<Object> deleteMatchPlayer(@PathVariable("matchId") Long matchId, @PathVariable("playerId") Long playerId) {
         try {
@@ -89,7 +130,7 @@ public class MatchPlayerRestController {
             MatchPlayerReadOnlyDTO matchPlayerReadOnlyDTO = Mapper.mapMatchPlayerToReadOnlyDTO(matchPlayer);
             return new ResponseEntity<>(matchPlayerReadOnlyDTO, HttpStatus.OK);
         } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 }

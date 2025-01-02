@@ -161,7 +161,7 @@ public class MatchPlayerRestTests {
     }
 
     @Test
-    public void MatchPlayerRest_GetMatchPlayerByMatchIdAndPlayerId_ReturnsBadRequest() throws Exception {
+    public void MatchPlayerRest_GetMatchPlayerByMatchIdAndPlayerId_ReturnsNotFound() throws Exception {
         Long matchId = 1L;
         Long playerId = 2L;
 
@@ -170,7 +170,7 @@ public class MatchPlayerRestTests {
         ResultActions response = mockMvc.perform(get("/api/matchesplayers/1/2")
                 .contentType(MediaType.APPLICATION_JSON));
 
-        response.andExpect(MockMvcResultMatchers.status().isBadRequest());
+        response.andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test
@@ -189,14 +189,14 @@ public class MatchPlayerRestTests {
     }
 
     @Test
-    public void MatchPlayerRest_AddMatchPlayer_TeamNotFound_ReturnsBadRequest() throws Exception {
+    public void MatchPlayerRest_AddMatchPlayer_EntityNotFound_ReturnsNotFound() throws Exception {
         when(matchPlayerService.insertMatchPlayer(Mockito.any(MatchPlayerInsertDTO.class))).thenThrow(EntityNotFoundException.class);
 
         ResultActions response = mockMvc.perform(post("/api/matchesplayers")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(matchPlayerInsertDTO)));
 
-        response.andExpect(MockMvcResultMatchers.status().isBadRequest());
+        response.andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test
@@ -245,14 +245,14 @@ public class MatchPlayerRestTests {
     }
 
     @Test
-    public void MatchPlayerRest_UpdateMatchPlayer_EntityNotFound_ReturnsBadRequest() throws Exception {
+    public void MatchPlayerRest_UpdateMatchPlayer_EntityNotFound_ReturnsNotFound() throws Exception {
         when(matchPlayerService.updateMatchPlayer(Mockito.any(MatchPlayerUpdateDTO.class))).thenThrow(EntityNotFoundException.class);
 
         ResultActions response = mockMvc.perform(put("/api/matchesplayers/1/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(matchPlayerUpdateDTO)));
 
-        response.andExpect(MockMvcResultMatchers.status().isBadRequest());
+        response.andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test
@@ -270,7 +270,7 @@ public class MatchPlayerRestTests {
     }
 
     @Test
-    public void MatchPlayerRest_DeleteMatchPlayer_ReturnsBadRequest() throws Exception {
+    public void MatchPlayerRest_DeleteMatchPlayer_ReturnsNotFound() throws Exception {
         Long matchId = 1L;
         Long playerId = 2L;
 
@@ -279,6 +279,6 @@ public class MatchPlayerRestTests {
         ResultActions response = mockMvc.perform(delete("/api/matchesplayers/1/2")
                 .contentType(MediaType.APPLICATION_JSON));
 
-        response.andExpect(MockMvcResultMatchers.status().isBadRequest());
+        response.andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 }

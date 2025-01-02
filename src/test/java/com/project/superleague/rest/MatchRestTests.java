@@ -151,7 +151,7 @@ public class MatchRestTests {
     }
 
     @Test
-    public void MatchRest_GetMatchesByDate_ReturnsBadRequest() throws Exception {
+    public void MatchRest_GetMatchesByDate_ReturnsNotFound() throws Exception {
         LocalDate searchParameter = LocalDate.parse("2024-10-08");
 
         when(matchService.getMatchByDate(searchParameter)).thenThrow(EntityNotFoundException.class);
@@ -159,7 +159,7 @@ public class MatchRestTests {
         ResultActions response = mockMvc.perform(get("/api/matches?date=08102024")
                 .contentType(MediaType.APPLICATION_JSON));
 
-        response.andExpect(MockMvcResultMatchers.status().isBadRequest());
+        response.andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test
@@ -176,7 +176,7 @@ public class MatchRestTests {
     }
 
     @Test
-    public void MatchRest_GetMatchById_ReturnsBadRequest() throws Exception {
+    public void MatchRest_GetMatchById_ReturnsNotFound() throws Exception {
         Long matchId = 2L;
 
         when(matchService.getMatchById(matchId)).thenThrow(EntityNotFoundException.class);
@@ -184,7 +184,7 @@ public class MatchRestTests {
         ResultActions response = mockMvc.perform(get("/api/matches/2")
                 .contentType(MediaType.APPLICATION_JSON));
 
-        response.andExpect(MockMvcResultMatchers.status().isBadRequest());
+        response.andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test
@@ -202,14 +202,14 @@ public class MatchRestTests {
     }
 
     @Test
-    public void MatchRest_AddMatch_TeamNotFound_ReturnsBadRequest() throws Exception {
+    public void MatchRest_AddMatch_TeamNotFound_ReturnsNotFound() throws Exception {
         when(matchService.insertMatch(Mockito.any(MatchInsertDTO.class))).thenThrow(EntityNotFoundException.class);
 
         ResultActions response = mockMvc.perform(post("/api/matches")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(matchInsertDTO)));
 
-        response.andExpect(MockMvcResultMatchers.status().isBadRequest());
+        response.andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test
@@ -256,14 +256,14 @@ public class MatchRestTests {
     }
 
     @Test
-    public void MatchRest_UpdateMatch_EntityNotFound_ReturnsBadRequest() throws Exception {
+    public void MatchRest_UpdateMatch_EntityNotFound_ReturnsNotFound() throws Exception {
         when(matchService.updateMatch(Mockito.any(MatchUpdateDTO.class))).thenThrow(EntityNotFoundException.class);
 
         ResultActions response = mockMvc.perform(put("/api/matches/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(matchUpdateDTO)));
 
-        response.andExpect(MockMvcResultMatchers.status().isBadRequest());
+        response.andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test
@@ -289,7 +289,7 @@ public class MatchRestTests {
     }
 
     @Test
-    public void MatchRest_DeleteMatch_ReturnsBadRequest() throws Exception {
+    public void MatchRest_DeleteMatch_ReturnsNotFound() throws Exception {
         Long matchId = 2L;
 
         when(matchService.deleteMatch(matchId)).thenThrow(EntityNotFoundException.class);
@@ -297,6 +297,6 @@ public class MatchRestTests {
         ResultActions response = mockMvc.perform(delete("/api/matches/2")
                 .contentType(MediaType.APPLICATION_JSON));
 
-        response.andExpect(MockMvcResultMatchers.status().isBadRequest());
+        response.andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 }

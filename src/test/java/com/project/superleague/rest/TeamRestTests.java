@@ -165,7 +165,7 @@ public class TeamRestTests {
     }
 
     @Test
-    public void TeamRest_GetTeamById_ReturnsBadRequest() throws Exception {
+    public void TeamRest_GetTeamById_ReturnsNotFound() throws Exception {
         Long teamId = 2L;
 
         when(teamService.getTeamById(teamId)).thenThrow(EntityNotFoundException.class);
@@ -173,7 +173,7 @@ public class TeamRestTests {
         ResultActions response = mockMvc.perform(get("/api/teams/2")
                 .contentType(MediaType.APPLICATION_JSON));
 
-        response.andExpect(MockMvcResultMatchers.status().isBadRequest());
+        response.andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test
@@ -233,14 +233,14 @@ public class TeamRestTests {
     }
 
     @Test
-    public void TeamRest_UpdateTeam_TeamNotFound_ReturnsBadRequest() throws Exception {
+    public void TeamRest_UpdateTeam_TeamNotFound_ReturnsNotFound() throws Exception {
         when(teamService.updateTeam(Mockito.any(TeamUpdateDTO.class))).thenThrow(EntityNotFoundException.class);
 
         ResultActions response = mockMvc.perform(put("/api/teams/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(teamUpdateDTO)));
 
-        response.andExpect(MockMvcResultMatchers.status().isBadRequest());
+        response.andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test
@@ -266,7 +266,7 @@ public class TeamRestTests {
     }
 
     @Test
-    public void TeamRest_DeleteTeam_ReturnsBadRequest() throws Exception {
+    public void TeamRest_DeleteTeam_ReturnsNotFound() throws Exception {
         Long teamId = 2L;
 
         when(teamService.deleteTeam(teamId)).thenThrow(EntityNotFoundException.class);
@@ -274,6 +274,6 @@ public class TeamRestTests {
         ResultActions response = mockMvc.perform(delete("/api/teams/2")
                 .contentType(MediaType.APPLICATION_JSON));
 
-        response.andExpect(MockMvcResultMatchers.status().isBadRequest());
+        response.andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 }
