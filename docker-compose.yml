@@ -1,11 +1,10 @@
 services:
   mysql:
     container_name: mysql
-    image: mysql
+    image: mysql:8.0.40
     ports:
       - "3307:3306"
-    env_file:
-      - ".env"
+    env_file: .env
     environment:
       - MYSQL_DATABASE=superleaguedb
       - MYSQL_ROOT_PASSWORD=${DB_USER_PASSWD}
@@ -14,11 +13,8 @@ services:
     networks:
       - stack
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p ${DB_USER_PASSWD}"]
-      interval: 40s
-      timeout: 30s
-      retries: 3
-      start_period: 120s
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-u", "root", "-p ${DB_USER_PASSWD}"]
+      start_period: 600s
 
   application:
     container_name: application
@@ -27,8 +23,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
-    env_file:
-      - ".env"
+    env_file: .env
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/superleaguedb?serverTimezone=UTC
     networks:
