@@ -4,6 +4,8 @@ services:
     image: mysql:8.0.40
     ports:
       - "3307:3306"
+    volumes:
+       - "./sql-scripts:/docker-entrypoint-initdb.d"
     env_file: .env
     environment:
       - MYSQL_DATABASE=superleaguedb

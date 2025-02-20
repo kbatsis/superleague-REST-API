@@ -18,8 +18,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -28,14 +32,14 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
-@WebMvcTest(controllers = PlayerRestController.class)
-@AutoConfigureMockMvc(addFilters = false)
+@SpringBootTest
+@AutoConfigureMockMvc
 @ExtendWith(MockitoExtension.class)
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration
 public class PlayerRestTests {
     @Autowired
     private MockMvc mockMvc;
@@ -187,6 +191,7 @@ public class PlayerRestTests {
     }
 
     @Test
+    @WithMockUser(authorities = "admin")
     public void PlayerRest_AddPlayer_ReturnsCreated() throws Exception {
         when(playerService.insertPlayer(Mockito.any(PlayerInsertDTO.class))).thenReturn(player);
 
@@ -201,6 +206,7 @@ public class PlayerRestTests {
     }
 
     @Test
+    @WithMockUser(authorities = "admin")
     public void PlayerRest_AddPlayer_TeamNotFound_ReturnsNotFound() throws Exception {
         when(playerService.insertPlayer(Mockito.any(PlayerInsertDTO.class))).thenThrow(EntityNotFoundException.class);
 
@@ -212,6 +218,7 @@ public class PlayerRestTests {
     }
 
     @Test
+    @WithMockUser(authorities = "admin")
     public void PlayerRest_AddPlayer_ReturnsServiceUnavailable() throws Exception {
         when(playerService.insertPlayer(Mockito.any(PlayerInsertDTO.class))).thenThrow(Exception.class);
 
@@ -223,6 +230,7 @@ public class PlayerRestTests {
     }
 
     @Test
+    @WithMockUser(authorities = "admin")
     public void PlayerRest_AddPlayer_ValidationError_ReturnsBadRequest() throws Exception {
         ResultActions response = mockMvc.perform(post("/api/players")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -232,6 +240,7 @@ public class PlayerRestTests {
     }
 
     @Test
+    @WithMockUser(authorities = "admin")
     public void PlayerRest_UpdatePlayer_ReturnsOk() throws Exception {
         when(playerService.updatePlayer(Mockito.any(PlayerUpdateDTO.class))).thenReturn(updatedPlayer);
 
@@ -246,6 +255,7 @@ public class PlayerRestTests {
     }
 
     @Test
+    @WithMockUser(authorities = "admin")
     public void PlayerRest_UpdatePlayer_ReturnsUnauthorized() throws Exception {
         ResultActions response = mockMvc.perform(put("/api/players/2")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -255,6 +265,7 @@ public class PlayerRestTests {
     }
 
     @Test
+    @WithMockUser(authorities = "admin")
     public void PlayerRest_UpdatePlayer_EntityNotFound_ReturnsNotFound() throws Exception {
         when(playerService.updatePlayer(Mockito.any(PlayerUpdateDTO.class))).thenThrow(EntityNotFoundException.class);
 
@@ -266,6 +277,7 @@ public class PlayerRestTests {
     }
 
     @Test
+    @WithMockUser(authorities = "admin")
     public void PlayerRest_UpdatePlayer_ValidationError_ReturnsBadRequest() throws Exception {
         ResultActions response = mockMvc.perform(put("/api/players/1")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -275,6 +287,7 @@ public class PlayerRestTests {
     }
 
     @Test
+    @WithMockUser(authorities = "admin")
     public void PlayerRest_DeletePlayer_ReturnsOk() throws Exception {
         Long playerId = 1L;
 
@@ -288,6 +301,7 @@ public class PlayerRestTests {
     }
 
     @Test
+    @WithMockUser(authorities = "admin")
     public void PlayerRest_DeletePlayer_ReturnsNotFound() throws Exception {
         Long playerId = 2L;
 

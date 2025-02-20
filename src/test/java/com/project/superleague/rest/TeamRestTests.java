@@ -16,10 +16,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -31,9 +36,11 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
-@WebMvcTest(controllers = TeamRestController.class)
-@AutoConfigureMockMvc(addFilters = false)
+@SpringBootTest
+@AutoConfigureMockMvc
 @ExtendWith(MockitoExtension.class)
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration
 public class TeamRestTests {
     @Autowired
     private MockMvc mockMvc;
@@ -177,6 +184,7 @@ public class TeamRestTests {
     }
 
     @Test
+    @WithMockUser(authorities = "admin")
     public void TeamRest_AddTeam_ReturnsCreated() throws Exception {
         when(teamService.insertTeam(Mockito.any(TeamInsertDTO.class))).thenReturn(team);
 
@@ -191,6 +199,7 @@ public class TeamRestTests {
     }
 
     @Test
+    @WithMockUser(authorities = "admin")
     public void TeamRest_AddTeam_ReturnsServiceUnavailable() throws Exception {
         when(teamService.insertTeam(Mockito.any(TeamInsertDTO.class))).thenThrow(Exception.class);
 
@@ -202,6 +211,7 @@ public class TeamRestTests {
     }
 
     @Test
+    @WithMockUser(authorities = "admin")
     public void TeamRest_AddTeam_ValidationError_ReturnsBadRequest() throws Exception {
         ResultActions response = mockMvc.perform(post("/api/teams")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -211,6 +221,7 @@ public class TeamRestTests {
     }
 
     @Test
+    @WithMockUser(authorities = "admin")
     public void TeamRest_UpdateTeam_ReturnsOk() throws Exception {
         when(teamService.updateTeam(Mockito.any(TeamUpdateDTO.class))).thenReturn(updatedTeam);
 
@@ -224,6 +235,7 @@ public class TeamRestTests {
     }
 
     @Test
+    @WithMockUser(authorities = "admin")
     public void TeamRest_UpdateTeam_ReturnsUnauthorized() throws Exception {
         ResultActions response = mockMvc.perform(put("/api/teams/2")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -233,6 +245,7 @@ public class TeamRestTests {
     }
 
     @Test
+    @WithMockUser(authorities = "admin")
     public void TeamRest_UpdateTeam_TeamNotFound_ReturnsNotFound() throws Exception {
         when(teamService.updateTeam(Mockito.any(TeamUpdateDTO.class))).thenThrow(EntityNotFoundException.class);
 
@@ -244,6 +257,7 @@ public class TeamRestTests {
     }
 
     @Test
+    @WithMockUser(authorities = "admin")
     public void TeamRest_UpdateTeam_ValidationError_ReturnsBadRequest() throws Exception {
         ResultActions response = mockMvc.perform(put("/api/teams/1")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -253,6 +267,7 @@ public class TeamRestTests {
     }
 
     @Test
+    @WithMockUser(authorities = "admin")
     public void TeamRest_DeleteTeam_ReturnsOk() throws Exception {
         Long teamId = 1L;
 
@@ -266,6 +281,7 @@ public class TeamRestTests {
     }
 
     @Test
+    @WithMockUser(authorities = "admin")
     public void TeamRest_DeleteTeam_ReturnsNotFound() throws Exception {
         Long teamId = 2L;
 

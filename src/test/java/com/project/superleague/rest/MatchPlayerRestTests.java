@@ -21,8 +21,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -33,9 +37,11 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
-@WebMvcTest(controllers = MatchPlayerRestController.class)
-@AutoConfigureMockMvc(addFilters = false)
+@SpringBootTest
+@AutoConfigureMockMvc
 @ExtendWith(MockitoExtension.class)
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration
 public class MatchPlayerRestTests {
     @Autowired
     private MockMvc mockMvc;
@@ -174,6 +180,7 @@ public class MatchPlayerRestTests {
     }
 
     @Test
+    @WithMockUser(authorities = "admin")
     public void MatchPlayerRest_AddMatchPlayer_ReturnsCreated() throws Exception {
         when(matchPlayerService.insertMatchPlayer(Mockito.any(MatchPlayerInsertDTO.class))).thenReturn(matchPlayer);
 
@@ -189,6 +196,7 @@ public class MatchPlayerRestTests {
     }
 
     @Test
+    @WithMockUser(authorities = "admin")
     public void MatchPlayerRest_AddMatchPlayer_EntityNotFound_ReturnsNotFound() throws Exception {
         when(matchPlayerService.insertMatchPlayer(Mockito.any(MatchPlayerInsertDTO.class))).thenThrow(EntityNotFoundException.class);
 
@@ -200,6 +208,7 @@ public class MatchPlayerRestTests {
     }
 
     @Test
+    @WithMockUser(authorities = "admin")
     public void MatchPlayerRest_AddMatchPlayer_AlreadyExists_ReturnsBadRequest() throws Exception {
         when(matchPlayerService.insertMatchPlayer(Mockito.any(MatchPlayerInsertDTO.class))).thenThrow(EntityAlreadyExistsException.class);
 
@@ -211,6 +220,7 @@ public class MatchPlayerRestTests {
     }
 
     @Test
+    @WithMockUser(authorities = "admin")
     public void MatchPlayerRest_AddMatchPlayer_ReturnsServiceUnavailable() throws Exception {
         when(matchPlayerService.insertMatchPlayer(Mockito.any(MatchPlayerInsertDTO.class))).thenThrow(Exception.class);
 
@@ -222,6 +232,7 @@ public class MatchPlayerRestTests {
     }
 
     @Test
+    @WithMockUser(authorities = "admin")
     public void MatchPlayerRest_UpdateMatchPlayer_ReturnsOk() throws Exception {
         when(matchPlayerService.updateMatchPlayer(Mockito.any(MatchPlayerUpdateDTO.class))).thenReturn(updatedMatchPlayer);
 
@@ -236,6 +247,7 @@ public class MatchPlayerRestTests {
     }
 
     @Test
+    @WithMockUser(authorities = "admin")
     public void MatchPlayerRest_UpdateMatchPlayer_ReturnsUnauthorized() throws Exception {
         ResultActions response = mockMvc.perform(put("/api/matchesplayers/1/2")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -245,6 +257,7 @@ public class MatchPlayerRestTests {
     }
 
     @Test
+    @WithMockUser(authorities = "admin")
     public void MatchPlayerRest_UpdateMatchPlayer_EntityNotFound_ReturnsNotFound() throws Exception {
         when(matchPlayerService.updateMatchPlayer(Mockito.any(MatchPlayerUpdateDTO.class))).thenThrow(EntityNotFoundException.class);
 
@@ -256,6 +269,7 @@ public class MatchPlayerRestTests {
     }
 
     @Test
+    @WithMockUser(authorities = "admin")
     public void MatchPlayerRest_DeleteMatchPlayer_ReturnsOk() throws Exception {
         Long matchId = 1L;
         Long playerId = 1L;
@@ -270,6 +284,7 @@ public class MatchPlayerRestTests {
     }
 
     @Test
+    @WithMockUser(authorities = "admin")
     public void MatchPlayerRest_DeleteMatchPlayer_ReturnsNotFound() throws Exception {
         Long matchId = 1L;
         Long playerId = 2L;
